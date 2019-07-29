@@ -39,8 +39,8 @@ public class Card extends BaseModel
     @Column(name = "attack")
     private Integer attack;
 
-    @Column(name = "defence")
-    private Integer defence;
+    @Column(name = "defense")
+    private Integer defense;
 
     @Column(name = "card_type")
     private CardType cardType;
