@@ -1,0 +1,5 @@
+GET     /                                                   controllers.IndexController.index()
+
+GET     /cards/:id                                          controllers.CardsController.get(id: Long)
+
+#POST    /cards/filters                                      controllers.CardsController.getWithFilters()

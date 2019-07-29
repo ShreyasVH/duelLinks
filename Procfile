@@ -1,0 +1,1 @@
+web: target/universal/stage/bin/duellinks -Dhttp.port=${PORT} -jvm-debug "8003"
