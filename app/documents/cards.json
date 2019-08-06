@@ -1,0 +1,73 @@
+{
+  "settings": {
+    "index": {
+      "number_of_shards": "2",
+      "max_ngram_diff": "10",
+      "analysis": {
+        "analyzer": {
+          "my_analyzer": {
+            "filter": [
+              "lowercase"
+            ],
+            "tokenizer": "my_tokenizer"
+          },
+          "my_search_analyzer": {
+            "tokenizer": "lowercase"
+          }
+        },
+        "tokenizer": {
+          "my_tokenizer": {
+            "token_chars": [
+              "letter",
+              "digit"
+            ],
+            "min_gram": "2",
+            "type": "ngram",
+            "max_gram": "10"
+          }
+        }
+      },
+      "number_of_replicas": "1"
+    }
+  },
+  "mappings": {
+    "properties": {
+      "id": {
+        "type": "long"
+      },
+      "name": {
+        "type": "keyword"
+      },
+      "level": {
+        "type": "integer"
+      },
+      "attribute": {
+        "type": "keyword"
+      },
+      "type": {
+        "type": "keyword"
+      },
+      "attack": {
+        "type": "integer"
+      },
+      "defense": {
+        "type": "integer"
+      },
+      "cardType": {
+        "type": "keyword"
+      },
+      "cardSubTypes": {
+        "type": "keyword"
+      },
+      "rarity": {
+        "type": "keyword"
+      },
+      "limitType": {
+        "type": "keyword"
+      },
+      "imageUrl": {
+        "type": "text"
+      }
+    }
+  }
+}

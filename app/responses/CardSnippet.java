@@ -12,6 +12,8 @@ import enums.LimitType;
 import enums.Rarity;
 import enums.Type;
 
+import java.util.List;
+
 
 @Getter
 @Setter
@@ -35,7 +37,7 @@ public class CardSnippet
 
     private CardType cardType;
 
-    private CardSubType cardSubType;
+    private List<CardSubType> cardSubTypes;
 
     private Rarity rarity;
 

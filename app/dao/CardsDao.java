@@ -8,18 +8,16 @@ import java.util.List;
 import java.util.ArrayList;
 
 import models.Card;
+import models.CardSubTypeMap;
 
 public class CardsDao
 {
-    private static EbeanServer db = null;
+    private final EbeanServer db = Ebean.getServer("default");
 
     @Inject
     public CardsDao()
     {
-        if(null == db)
-        {
-            db = Ebean.getServer("default");
-        }
+
     }
 
     public Card get(Long id)
@@ -38,20 +36,4 @@ public class CardsDao
 
         return card;
     }
-//
-//    public List<Card> getWithFilters()
-//    {
-//        List<Card> cards = new ArrayList<>();
-//
-//        try
-//        {
-//            cards = db.find(Card.class).where().findList();
-//        }
-//        catch(Exception ex)
-//        {
-//
-//        }
-//
-//        return cards;
-//    }
 }

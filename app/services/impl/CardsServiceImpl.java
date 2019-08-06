@@ -1,18 +1,23 @@
 package services.impl;
 
+import dao.CardSubTypeMapDao;
 import enums.CardElasticAttribute;
+import enums.CardSubType;
 import enums.ElasticIndex;
 import models.Card;
+import models.CardSubTypeMap;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import requests.CardSubTypeMapRequest;
 import requests.CardsFilterRequest;
 import responses.CardSnippet;
 import responses.ElasticResponse;
 import services.CardsService;
 import com.google.inject.Inject;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +30,7 @@ import utils.Utils;
 public class CardsServiceImpl implements CardsService
 {
     private final CardsDao cardsDao;
+    private final CardSubTypeMapDao cardSubTypeMapDao;
 
     private final ElasticService elasticService;
 
@@ -32,10 +38,12 @@ public class CardsServiceImpl implements CardsService
     public CardsServiceImpl
     (
         CardsDao cardsDao,
+        CardSubTypeMapDao cardSubTypeMapDao,
         ElasticService elasticService
     )
     {
         this.cardsDao = cardsDao;
+        this.cardSubTypeMapDao = cardSubTypeMapDao;
 
         this.elasticService = elasticService;
     }
@@ -81,7 +89,19 @@ public class CardsServiceImpl implements CardsService
 
     private CardSnippet cardSnippet(Card card)
     {
-        return Utils.convertObject(card, CardSnippet.class);
+        CardSnippet cardSnippet = Utils.convertObject(card, CardSnippet.class);
+
+        CardSubTypeMapRequest cardSubTypeMapRequest = new CardSubTypeMapRequest();
+        cardSubTypeMapRequest.setCardIds(Collections.singletonList(card.getId()));
+        List<CardSubTypeMap> cardSubTypeMaps = this.cardSubTypeMapDao.list(cardSubTypeMapRequest);
+        List<CardSubType> cardSubTypeList = new ArrayList<>();
+        for(CardSubTypeMap cardSubTypeMap: cardSubTypeMaps)
+        {
+            cardSubTypeList.add(cardSubTypeMap.getCardSubType());
+        }
+        cardSnippet.setCardSubTypes(cardSubTypeList);
+
+        return cardSnippet;
     }
 
     private SearchRequest buildElasticRequest(CardsFilterRequest filterRequest)

@@ -45,9 +45,6 @@ public class Card extends BaseModel
     @Column(name = "card_type")
     private CardType cardType;
 
-    @Column(name = "card_sub_type")
-    private CardSubType cardSubType;
-
     @Column(name = "rarity")
     private Rarity rarity;
 
