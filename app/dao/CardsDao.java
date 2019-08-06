@@ -33,7 +33,7 @@ public class CardsDao
         }
         catch(Exception ex)
         {
-
+            String sh = "sh";
         }
 
         return card;

@@ -1,12 +1,15 @@
 package services;
 
-import java.util.List;
-
 import models.Card;
+import requests.CardsFilterRequest;
+import responses.CardSnippet;
+import responses.ElasticResponse;
 
 public interface CardsService
 {
-    Card get(Long id);
+    CardSnippet get(Long id);
 
-//    List<Card> getWithFilters();
+    ElasticResponse<CardSnippet> getWithFilters(CardsFilterRequest filterRequest);
+
+    Boolean index(Long id);
 }
