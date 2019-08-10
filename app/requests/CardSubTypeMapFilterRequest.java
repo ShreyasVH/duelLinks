@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class CardSubTypeMapRequest
+public class CardSubTypeMapFilterRequest
 {
     private List<Long> cardIds = new ArrayList<>();
 

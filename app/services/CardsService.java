@@ -1,9 +1,13 @@
 package services;
 
 import models.Card;
+import play.libs.concurrent.HttpExecutionContext;
+import requests.CardRequest;
 import requests.CardsFilterRequest;
 import responses.CardSnippet;
 import responses.ElasticResponse;
+
+import java.util.concurrent.CompletionStage;
 
 public interface CardsService
 {
@@ -11,5 +15,9 @@ public interface CardsService
 
     ElasticResponse<CardSnippet> getWithFilters(CardsFilterRequest filterRequest);
 
-    Boolean index(Long id);
+    CompletionStage<Boolean> index(Long id);
+
+    CardSnippet create(CardRequest request, HttpExecutionContext httpExecutionContext);
+
+    CompletionStage<CardSnippet> update(CardRequest request, HttpExecutionContext httpExecutionContext);
 }

@@ -1,9 +1,4 @@
-package responses;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+package requests;
 
 import enums.Attribute;
 import enums.CardSubType;
@@ -11,18 +6,16 @@ import enums.CardType;
 import enums.LimitType;
 import enums.Rarity;
 import enums.Type;
-import models.Card;
-import models.CardSubTypeMap;
-import utils.Utils;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
-
 
 @Getter
 @Setter
 @NoArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class CardSnippet
+public class CardRequest
 {
     private Long id;
 
@@ -46,5 +39,10 @@ public class CardSnippet
 
     private LimitType limitType;
 
-    private String imageUrl;
+    private String imageUrl = "";
+
+    public void validate()
+    {
+
+    }
 }

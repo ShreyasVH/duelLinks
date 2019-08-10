@@ -10,7 +10,9 @@ import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
-import requests.CardSubTypeMapRequest;
+import play.libs.concurrent.HttpExecutionContext;
+import requests.CardRequest;
+import requests.CardSubTypeMapFilterRequest;
 import requests.CardsFilterRequest;
 import responses.CardSnippet;
 import responses.ElasticResponse;
@@ -22,6 +24,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 
 import dao.CardsDao;
 import services.ElasticService;
@@ -75,25 +79,36 @@ public class CardsServiceImpl implements CardsService
     }
 
     @Override
-    public Boolean index(Long id)
+    public CompletionStage<Boolean> index(Long id)
     {
-        Boolean isSuccess = false;
-        Card card = this.cardsDao.get(id);
-        if(null != card)
-        {
-            isSuccess = elasticService.index(ElasticIndex.CARDS, id.toString(), cardSnippet(card));
-        }
-
-        return isSuccess;
+        CompletionStage<Card> cardResponse = this.cardsDao.get(id);
+        return cardResponse.thenApplyAsync(card -> {
+            Boolean isSuccess = false;
+            if(null != card)
+            {
+                isSuccess = elasticService.index(ElasticIndex.CARDS, id.toString(), cardSnippet(card));
+            }
+            return isSuccess;
+        });
     }
 
     private CardSnippet cardSnippet(Card card)
     {
+        return this.cardSnippet(card, null);
+    }
+
+    private CardSnippet cardSnippet(Card card, List<CardSubTypeMap> cardSubTypeMaps)
+    {
         CardSnippet cardSnippet = Utils.convertObject(card, CardSnippet.class);
 
-        CardSubTypeMapRequest cardSubTypeMapRequest = new CardSubTypeMapRequest();
-        cardSubTypeMapRequest.setCardIds(Collections.singletonList(card.getId()));
-        List<CardSubTypeMap> cardSubTypeMaps = this.cardSubTypeMapDao.list(cardSubTypeMapRequest);
+        CardSubTypeMapFilterRequest cardSubTypeMapFilterRequest = new CardSubTypeMapFilterRequest();
+        cardSubTypeMapFilterRequest.setCardIds(Collections.singletonList(card.getId()));
+
+        if(null == cardSubTypeMaps)
+        {
+            cardSubTypeMaps = this.cardSubTypeMapDao.list(cardSubTypeMapFilterRequest);
+        }
+
         List<CardSubType> cardSubTypeList = new ArrayList<>();
         for(CardSubTypeMap cardSubTypeMap: cardSubTypeMaps)
         {
@@ -132,5 +147,169 @@ public class CardsServiceImpl implements CardsService
         builder.query(query);
         request.source(builder);
         return request;
+    }
+
+    private Card cardFromRequest(CardRequest cardRequest)
+    {
+        return this.cardFromRequest(cardRequest, null);
+    }
+
+    private Card cardFromRequest(CardRequest cardRequest, Card existingCard)
+    {
+        Card card;
+        if(null == existingCard)
+        {
+            card = Utils.convertObject(cardRequest, Card.class);
+        }
+        else
+        {
+            card = existingCard;
+
+            if(null != cardRequest.getName())
+            {
+                card.setName(cardRequest.getName());
+            }
+
+            if(null != cardRequest.getLevel())
+            {
+                card.setLevel(cardRequest.getLevel());
+            }
+
+            if(null != cardRequest.getAttribute())
+            {
+                card.setAttribute(cardRequest.getAttribute());
+            }
+
+            if(null != cardRequest.getType())
+            {
+                card.setType(cardRequest.getType());
+            }
+
+            if(null != cardRequest.getAttack())
+            {
+                card.setAttack(cardRequest.getAttack());
+            }
+
+            if(null != cardRequest.getDefense())
+            {
+                card.setDefense(cardRequest.getDefense());
+            }
+
+            if(null != cardRequest.getCardType())
+            {
+                card.setCardType(cardRequest.getCardType());
+            }
+
+            if(null != cardRequest.getRarity())
+            {
+                card.setRarity(cardRequest.getRarity());
+            }
+
+            if(null != cardRequest.getLimitType())
+            {
+                card.setLimitType(cardRequest.getLimitType());
+            }
+
+            if(null != cardRequest.getImageUrl())
+            {
+                card.setImageUrl(cardRequest.getImageUrl());
+            }
+        }
+
+        return card;
+    }
+
+    @Override
+    public CardSnippet create(CardRequest request, HttpExecutionContext httpExecutionContext)
+    {
+        CardSnippet cardSnippet = null;
+        Card card = this.cardFromRequest(request);
+        card = this.cardsDao.save(card);
+        final Card cardForAsyncProcess = card;
+
+        if(null != card.getId())
+        {
+            List<CardSubTypeMap> cardSubTypeMaps = new ArrayList<>();
+            for(CardSubType cardSubType: request.getCardSubTypes())
+            {
+                CardSubTypeMap cardSubTypeMap = new CardSubTypeMap();
+                cardSubTypeMap.setCardId(card.getId());
+                cardSubTypeMap.setCardSubType(cardSubType);
+
+                cardSubTypeMaps.add(cardSubTypeMap);
+            }
+
+            this.cardSubTypeMapDao.create(cardSubTypeMaps);
+            cardSnippet = this.cardSnippet(card, cardSubTypeMaps);
+
+            CompletableFuture.supplyAsync(() -> index(cardForAsyncProcess.getId()));
+        }
+        return cardSnippet;
+    }
+
+    @Override
+    public CompletionStage<CardSnippet> update(CardRequest request, HttpExecutionContext httpExecutionContext)
+    {
+        CompletionStage<Card> existingCardPromise = this.cardsDao.get(request.getId());
+        return existingCardPromise.thenApplyAsync(existingCard -> {
+            CardSnippet cardSnippet = null;
+            if(null != existingCard)
+            {
+                Card card = this.cardFromRequest(request, existingCard);
+                card = this.cardsDao.save(card);
+
+                final Card cardForAsyncProcess = card;
+
+                CardSubTypeMapFilterRequest cardSubTypeMapFilterRequest = new CardSubTypeMapFilterRequest();
+                cardSubTypeMapFilterRequest.setCardIds(Collections.singletonList(card.getId()));
+                List<CardSubTypeMap> existingCardSubTypeMaps = this.cardSubTypeMapDao.list(cardSubTypeMapFilterRequest);
+
+                List<CardSubType> cardSubTypesFromRequest = request.getCardSubTypes();
+
+                List<CardSubType> existingCardSubTypes = new ArrayList<>();
+                List<CardSubTypeMap> removedCardSubTypeMaps = new ArrayList<>();
+                List<CardSubTypeMap> newCardSubTypeMaps = new ArrayList<>();
+                List<CardSubTypeMap> updatedCardSubTypeMaps = new ArrayList<>();
+                for(CardSubTypeMap cardSubTypeMap: existingCardSubTypeMaps)
+                {
+                    existingCardSubTypes.add(cardSubTypeMap.getCardSubType());
+
+                    if(cardSubTypesFromRequest.contains(cardSubTypeMap.getCardSubType()))
+                    {
+                        updatedCardSubTypeMaps.add(cardSubTypeMap);
+                    }
+                    else
+                    {
+                        removedCardSubTypeMaps.add(cardSubTypeMap);
+                    }
+                }
+
+                cardSubTypesFromRequest.removeAll(existingCardSubTypes);
+
+                for(CardSubType cardSubType: cardSubTypesFromRequest)
+                {
+                    CardSubTypeMap cardSubTypeMap = new CardSubTypeMap();
+                    cardSubTypeMap.setCardId(card.getId());
+                    cardSubTypeMap.setCardSubType(cardSubType);
+
+                    newCardSubTypeMaps.add(cardSubTypeMap);
+                    updatedCardSubTypeMaps.add(cardSubTypeMap);
+                }
+
+                if(!removedCardSubTypeMaps.isEmpty())
+                {
+                    this.cardSubTypeMapDao.delete(removedCardSubTypeMaps);
+                }
+
+                if(!newCardSubTypeMaps.isEmpty())
+                {
+                    this.cardSubTypeMapDao.create(newCardSubTypeMaps);
+                }
+
+                cardSnippet = this.cardSnippet(card, updatedCardSubTypeMaps);
+                CompletableFuture.supplyAsync(() -> index(cardForAsyncProcess.getId()));
+            }
+            return cardSnippet;
+        }, httpExecutionContext.current());
     }
 }

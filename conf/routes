@@ -3,3 +3,5 @@ GET     /                                                   controllers.IndexCon
 GET     /cards/:id                                          controllers.CardsController.get(id: Long)
 POST    /cards/filters                                      controllers.CardsController.getWithFilters()
 GET     /cards/index/:id                                    controllers.CardsController.index(id: Long)
+POST    /cards                                              controllers.CardsController.create()
+PUT     /cards                                              controllers.CardsController.update(request: Request)

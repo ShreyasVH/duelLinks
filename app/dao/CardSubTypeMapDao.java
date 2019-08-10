@@ -5,7 +5,7 @@ import io.ebean.Ebean;
 import io.ebean.EbeanServer;
 import io.ebean.ExpressionList;
 import models.CardSubTypeMap;
-import requests.CardSubTypeMapRequest;
+import requests.CardSubTypeMapFilterRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ public class CardSubTypeMapDao
 
     }
 
-    private ExpressionList<CardSubTypeMap> request(CardSubTypeMapRequest request)
+    private ExpressionList<CardSubTypeMap> request(CardSubTypeMapFilterRequest request)
     {
         ExpressionList<CardSubTypeMap> expressionList = db.find(CardSubTypeMap.class).where();
 
@@ -37,7 +37,7 @@ public class CardSubTypeMapDao
         return expressionList;
     }
 
-    public List<CardSubTypeMap> list(CardSubTypeMapRequest request)
+    public List<CardSubTypeMap> list(CardSubTypeMapFilterRequest request)
     {
         List<CardSubTypeMap> cardSubTypeMaps = new ArrayList<>();
 
@@ -52,5 +52,34 @@ public class CardSubTypeMapDao
         }
 
         return cardSubTypeMaps;
+    }
+
+    public List<CardSubTypeMap> create(List<CardSubTypeMap> cardSubTypeMaps)
+    {
+        try
+        {
+            this.db.saveAll(cardSubTypeMaps);
+        }
+        catch (Exception ex)
+        {
+            String sh = "sh";
+        }
+
+        return cardSubTypeMaps;
+    }
+
+    public boolean delete(List<CardSubTypeMap> cardSubTypeMaps)
+    {
+        boolean isSuccess = false;
+        try
+        {
+            this.db.deleteAll(cardSubTypeMaps);
+            isSuccess = true;
+        }
+        catch(Exception ex)
+        {
+            String sh = "sh";
+        }
+        return isSuccess;
     }
 }
