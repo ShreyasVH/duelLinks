@@ -4,6 +4,8 @@ GET     /cards/attributes                                   controllers.CardsCon
 
 GET     /cards/types                                        controllers.CardsController.getTypes()
 
+GET     /cards/cardTypes                                    controllers.CardsController.getCardTypes()
+
 GET     /cards/:id                                          controllers.CardsController.get(id: Long)
 POST    /cards/filters                                      controllers.CardsController.getWithFilters()
 GET     /cards/index/:id                                    controllers.CardsController.index(id: Long)

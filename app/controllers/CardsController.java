@@ -120,4 +120,13 @@ public class CardsController extends BaseController
             return ok(Json.toJson(responseMap));
         }, httpExecutionContext.current());
     }
+
+    public CompletionStage<Result> getCardTypes()
+    {
+        return CompletableFuture.supplyAsync(() -> this.cardsService.getCardTypes(), httpExecutionContext.current()).thenApplyAsync(cardTypes -> {
+            Map<String, List> responseMap = new HashMap<>();
+            responseMap.put("cardTypes", cardTypes);
+            return ok(Json.toJson(responseMap));
+        }, httpExecutionContext.current());
+    }
 }

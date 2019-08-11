@@ -3,10 +3,7 @@ package services;
 import play.libs.concurrent.HttpExecutionContext;
 import requests.CardRequest;
 import requests.CardsFilterRequest;
-import responses.AttributeSnippet;
-import responses.CardFilterResponse;
-import responses.CardSnippet;
-import responses.TypeSnippet;
+import responses.*;
 
 import java.util.List;
 import java.util.concurrent.CompletionStage;
@@ -26,4 +23,6 @@ public interface CardsService
     List<AttributeSnippet> getAttributes();
 
     List<TypeSnippet> getTypes();
+
+    List<CardTypeSnippet> getCardTypes();
 }

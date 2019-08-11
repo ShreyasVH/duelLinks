@@ -12,11 +12,7 @@ import play.libs.concurrent.HttpExecutionContext;
 import requests.CardRequest;
 import requests.CardSubTypeMapFilterRequest;
 import requests.CardsFilterRequest;
-import responses.AttributeSnippet;
-import responses.CardFilterResponse;
-import responses.CardSnippet;
-import responses.ElasticResponse;
-import responses.TypeSnippet;
+import responses.*;
 import services.CardsService;
 import com.google.inject.Inject;
 
@@ -345,5 +341,19 @@ public class CardsServiceImpl implements CardsService
         }
 
         return types;
+    }
+
+    @Override
+    public List<CardTypeSnippet> getCardTypes()
+    {
+        List<CardTypeSnippet> cardTypes = new ArrayList<>();
+
+        for(CardType cardType: CardType.values())
+        {
+            CardTypeSnippet cardTypeSnippet = new CardTypeSnippet(cardType);
+            cardTypes.add(cardTypeSnippet);
+        }
+
+        return cardTypes;
     }
 }
