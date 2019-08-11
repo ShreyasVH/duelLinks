@@ -10,15 +10,18 @@ import java.util.concurrent.CompletionStage;
 
 import models.Card;
 import play.db.ebean.EbeanConfig;
+import play.db.ebean.EbeanDynamicEvolutions;
 
 public class CardsDao
 {
     private final EbeanServer db;
+    private final EbeanDynamicEvolutions ebeanDynamicEvolutions;
     private final DatabaseExecutionContext databaseExecutionContext;
 
     @Inject
-    public CardsDao(EbeanConfig ebeanConfig, DatabaseExecutionContext databaseExecutionContext)
+    public CardsDao(EbeanConfig ebeanConfig, EbeanDynamicEvolutions ebeanDynamicEvolutions, DatabaseExecutionContext databaseExecutionContext)
     {
+        this.ebeanDynamicEvolutions = ebeanDynamicEvolutions;
         this.db = Ebean.getServer(ebeanConfig.defaultServer());
         this.databaseExecutionContext = databaseExecutionContext;
     }
