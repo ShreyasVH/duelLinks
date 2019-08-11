@@ -1,10 +1,7 @@
 package services.impl;
 
 import dao.CardSubTypeMapDao;
-import enums.Attribute;
-import enums.CardElasticAttribute;
-import enums.CardSubType;
-import enums.ElasticIndex;
+import enums.*;
 import models.Card;
 import models.CardSubTypeMap;
 import org.elasticsearch.action.search.SearchRequest;
@@ -19,6 +16,7 @@ import responses.AttributeSnippet;
 import responses.CardFilterResponse;
 import responses.CardSnippet;
 import responses.ElasticResponse;
+import responses.TypeSnippet;
 import services.CardsService;
 import com.google.inject.Inject;
 
@@ -333,5 +331,19 @@ public class CardsServiceImpl implements CardsService
         }
 
         return attributes;
+    }
+
+    @Override
+    public List<TypeSnippet> getTypes()
+    {
+        List<TypeSnippet> types = new ArrayList<>();
+
+        for(Type type: Type.values())
+        {
+            TypeSnippet typeSnippet = new TypeSnippet(type);
+            types.add(typeSnippet);
+        }
+
+        return types;
     }
 }

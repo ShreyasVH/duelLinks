@@ -1,14 +1,12 @@
 package services;
 
-import enums.Attribute;
-import models.Card;
 import play.libs.concurrent.HttpExecutionContext;
 import requests.CardRequest;
 import requests.CardsFilterRequest;
 import responses.AttributeSnippet;
 import responses.CardFilterResponse;
 import responses.CardSnippet;
-import responses.ElasticResponse;
+import responses.TypeSnippet;
 
 import java.util.List;
 import java.util.concurrent.CompletionStage;
@@ -26,4 +24,6 @@ public interface CardsService
     CompletionStage<CardSnippet> update(CardRequest request, HttpExecutionContext httpExecutionContext);
 
     List<AttributeSnippet> getAttributes();
+
+    List<TypeSnippet> getTypes();
 }
