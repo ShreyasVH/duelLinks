@@ -1,6 +1,7 @@
 package services.impl;
 
 import dao.CardSubTypeMapDao;
+import enums.Attribute;
 import enums.CardElasticAttribute;
 import enums.CardSubType;
 import enums.ElasticIndex;
@@ -14,6 +15,8 @@ import play.libs.concurrent.HttpExecutionContext;
 import requests.CardRequest;
 import requests.CardSubTypeMapFilterRequest;
 import requests.CardsFilterRequest;
+import responses.AttributeSnippet;
+import responses.CardFilterResponse;
 import responses.CardSnippet;
 import responses.ElasticResponse;
 import services.CardsService;
@@ -61,10 +64,10 @@ public class CardsServiceImpl implements CardsService
         filters.put("id", Collections.singletonList(id.toString()));
         request.setFilters(filters);
 
-        ElasticResponse<CardSnippet> cardResponse = getWithFilters(request);
-        if(!cardResponse.getDocuments().isEmpty())
+        CardFilterResponse cardResponse = getWithFilters(request);
+        if(!cardResponse.getCards().isEmpty())
         {
-            cardSnippet = cardResponse.getDocuments().get(0);
+            cardSnippet = cardResponse.getCards().get(0);
         }
 
         return cardSnippet;
@@ -72,10 +75,15 @@ public class CardsServiceImpl implements CardsService
 
 
     @Override
-    public ElasticResponse<CardSnippet> getWithFilters(CardsFilterRequest filterRequest)
+    public CardFilterResponse getWithFilters(CardsFilterRequest filterRequest)
     {
+        CardFilterResponse response = new CardFilterResponse();
         SearchRequest searchRequest = buildElasticRequest(filterRequest);
-        return elasticService.search(searchRequest, CardSnippet.class);
+        ElasticResponse<CardSnippet> elasticResponse = elasticService.search(searchRequest, CardSnippet.class);
+        response.setTotalCount(elasticResponse.getTotalCount());
+        response.setCards(elasticResponse.getDocuments());
+        response.setOffset(Long.parseLong(String.valueOf(filterRequest.getOffset() + Math.min(filterRequest.getCount(), elasticResponse.getDocuments().size()))));
+        return response;
     }
 
     @Override
@@ -311,5 +319,19 @@ public class CardsServiceImpl implements CardsService
             }
             return cardSnippet;
         }, httpExecutionContext.current());
+    }
+
+    @Override
+    public List<AttributeSnippet> getAttributes()
+    {
+        List<AttributeSnippet> attributes = new ArrayList<>();
+
+        for(Attribute attribute: Attribute.values())
+        {
+            AttributeSnippet attributeSnippet = new AttributeSnippet(attribute);
+            attributes.add(attributeSnippet);
+        }
+
+        return attributes;
     }
 }

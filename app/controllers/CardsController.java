@@ -4,14 +4,19 @@ import com.google.inject.Inject;
 import play.mvc.Http;
 import play.mvc.Result;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.function.Supplier;
 
 import play.libs.concurrent.HttpExecutionContext;
 import play.libs.Json;
 
 import requests.CardRequest;
 import requests.CardsFilterRequest;
+import responses.AttributeSnippet;
 import responses.CardSnippet;
 import services.CardsService;
 import utils.Utils;
@@ -34,7 +39,16 @@ public class CardsController extends BaseController
 
     public CompletionStage<Result> get(Long id)
     {
-        return CompletableFuture.supplyAsync(() -> cardsService.get(id), httpExecutionContext.current()).thenApplyAsync(response -> ok(Json.toJson(response)));
+        return CompletableFuture.supplyAsync(() -> cardsService.get(id), httpExecutionContext.current()).thenApplyAsync(cardSnippet -> {
+            if(null == cardSnippet)
+            {
+                return notFound(Json.toJson("Card Not Found"));
+            }
+            else
+            {
+                return ok(Json.toJson(cardSnippet));
+            }
+        }, httpExecutionContext.current());
     }
 
     public CompletionStage<Result> getWithFilters()
@@ -87,5 +101,14 @@ public class CardsController extends BaseController
         }
         CompletionStage<CardSnippet> promise = cardsService.update(cardRequest, httpExecutionContext);
         return promise.thenApplyAsync(response -> ok(formatResponse(response)), httpExecutionContext.current());
+    }
+
+    public CompletionStage<Result> getAttributes()
+    {
+        return CompletableFuture.supplyAsync(() -> this.cardsService.getAttributes(), httpExecutionContext.current()).thenApplyAsync(attributes -> {
+            Map<String, List> responseMap = new HashMap<>();
+            responseMap.put("attributes", attributes);
+            return ok(Json.toJson(responseMap));
+        }, httpExecutionContext.current());
     }
 }
