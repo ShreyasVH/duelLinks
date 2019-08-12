@@ -6,6 +6,12 @@ GET     /cards/types                                        controllers.CardsCon
 
 GET     /cards/cardTypes                                    controllers.CardsController.getCardTypes()
 
+GET     /cards/cardSubTypes                                 controllers.CardsController.getCardSubTypes()
+
+GET     /cards/rarities                                     controllers.CardsController.getRarities()
+
+GET     /cards/limitTypes                                   controllers.CardsController.getLimitTypes()
+
 GET     /cards/:id                                          controllers.CardsController.get(id: Long)
 POST    /cards/filters                                      controllers.CardsController.getWithFilters()
 GET     /cards/index/:id                                    controllers.CardsController.index(id: Long)

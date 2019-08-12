@@ -25,4 +25,10 @@ public interface CardsService
     List<TypeSnippet> getTypes();
 
     List<CardTypeSnippet> getCardTypes();
+
+    List<CardSubTypeSnippet> getCardSubTypes();
+
+    List<RaritySnippet> getRarities();
+
+    List<LimitTypeSnippet> getLimitTypes();
 }

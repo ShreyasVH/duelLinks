@@ -356,4 +356,47 @@ public class CardsServiceImpl implements CardsService
 
         return cardTypes;
     }
+
+    @Override
+    public List<CardSubTypeSnippet> getCardSubTypes()
+    {
+        List<CardSubTypeSnippet> cardSubTypes = new ArrayList<>();
+
+        for(CardSubType cardSubType: CardSubType.values())
+        {
+            CardSubTypeSnippet cardSubTypeSnippet = new CardSubTypeSnippet(cardSubType);
+            cardSubTypes.add(cardSubTypeSnippet);
+        }
+
+        return cardSubTypes;
+    }
+
+    @Override
+    public List<RaritySnippet> getRarities()
+    {
+        List<RaritySnippet> rarities = new ArrayList<>();
+
+        for(Rarity rarity: Rarity.values())
+        {
+            RaritySnippet raritySnippet = new RaritySnippet(rarity);
+            rarities.add(raritySnippet);
+        }
+
+        return rarities;
+
+    }
+
+    @Override
+    public List<LimitTypeSnippet> getLimitTypes()
+    {
+        List<LimitTypeSnippet> limitTypes = new ArrayList<>();
+
+        for(LimitType limitType: LimitType.values())
+        {
+            LimitTypeSnippet limitTypeSnippet = new LimitTypeSnippet(limitType);
+            limitTypes.add(limitTypeSnippet);
+        }
+
+        return limitTypes;
+    }
 }

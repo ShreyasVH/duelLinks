@@ -129,4 +129,31 @@ public class CardsController extends BaseController
             return ok(Json.toJson(responseMap));
         }, httpExecutionContext.current());
     }
+
+    public CompletionStage<Result> getCardSubTypes()
+    {
+        return CompletableFuture.supplyAsync(() -> this.cardsService.getCardSubTypes(), httpExecutionContext.current()).thenApplyAsync(cardSubTypes -> {
+            Map<String, List> responseMap = new HashMap<>();
+            responseMap.put("cardSubTypes", cardSubTypes);
+            return ok(Json.toJson(responseMap));
+        }, httpExecutionContext.current());
+    }
+
+    public CompletionStage<Result> getRarities()
+    {
+        return CompletableFuture.supplyAsync(() -> this.cardsService.getRarities(), httpExecutionContext.current()).thenApplyAsync(rarities -> {
+            Map<String, List> responseMap = new HashMap<>();
+            responseMap.put("rarities", rarities);
+            return ok(Json.toJson(responseMap));
+        }, httpExecutionContext.current());
+    }
+
+    public CompletionStage<Result> getLimitTypes()
+    {
+        return CompletableFuture.supplyAsync(() -> this.cardsService.getLimitTypes(), httpExecutionContext.current()).thenApplyAsync(limitTypes -> {
+            Map<String, List> responseMap = new HashMap<>();
+            responseMap.put("limitTypes", limitTypes);
+            return ok(Json.toJson(responseMap));
+        }, httpExecutionContext.current());
+    }
 }
