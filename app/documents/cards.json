@@ -45,7 +45,15 @@
         "type": "keyword"
       },
       "type": {
-        "type": "keyword"
+        "type": "nested",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "keyword"
+          }
+        }
       },
       "attack": {
         "type": "integer"
