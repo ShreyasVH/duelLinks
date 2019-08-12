@@ -159,7 +159,7 @@ public class CardsServiceImpl implements CardsService
                     }
                     else if(FieldType.NESTED.equals(cardElasticAttribute.getType()))
                     {
-                        query.must(QueryBuilders.nestedQuery(cardElasticAttribute.getNestedTerm(), QueryBuilders.termsQuery(cardElasticAttribute.getNestedTerm(), valueList), ScoreMode.None));
+                        query.must(QueryBuilders.nestedQuery(cardElasticAttribute.getNestedLevel(), QueryBuilders.termsQuery(cardElasticAttribute.getNestedTerm(), valueList), ScoreMode.None));
                     }
                 }
             }
