@@ -4,6 +4,7 @@ import dao.CardSubTypeMapDao;
 import enums.*;
 import models.Card;
 import models.CardSubTypeMap;
+import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -101,7 +102,18 @@ public class CardsServiceImpl implements CardsService
 
     private CardSnippet cardSnippet(Card card, List<CardSubTypeMap> cardSubTypeMaps)
     {
-        CardSnippet cardSnippet = Utils.convertObject(card, CardSnippet.class);
+        CardSnippet cardSnippet = new CardSnippet();
+        cardSnippet.setId(card.getId());
+        cardSnippet.setName(card.getName());
+        cardSnippet.setLevel(card.getLevel());
+        cardSnippet.setAttribute(card.getAttribute());
+        cardSnippet.setType(new TypeSnippet(card.getType()));
+        cardSnippet.setAttack(card.getAttack());
+        cardSnippet.setDefense(card.getDefense());
+        cardSnippet.setCardType(card.getCardType());
+        cardSnippet.setRarity(card.getRarity());
+        cardSnippet.setLimitType(card.getLimitType());
+        cardSnippet.setImageUrl(card.getImageUrl());
 
         CardSubTypeMapFilterRequest cardSubTypeMapFilterRequest = new CardSubTypeMapFilterRequest();
         cardSubTypeMapFilterRequest.setCardIds(Collections.singletonList(card.getId()));
@@ -141,7 +153,14 @@ public class CardsServiceImpl implements CardsService
                 CardElasticAttribute cardElasticAttribute = CardElasticAttribute.fromString(key);
                 if(null != cardElasticAttribute)
                 {
-                    query.must(QueryBuilders.termsQuery(key, valueList));
+                    if(FieldType.NORMAL.equals(cardElasticAttribute.getType()))
+                    {
+                        query.must(QueryBuilders.termsQuery(key, valueList));
+                    }
+                    else if(FieldType.NESTED.equals(cardElasticAttribute.getType()))
+                    {
+                        query.must(QueryBuilders.nestedQuery(cardElasticAttribute.getNestedTerm(), QueryBuilders.termsQuery(cardElasticAttribute.getNestedTerm(), valueList), ScoreMode.None));
+                    }
                 }
             }
         }

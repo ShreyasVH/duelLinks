@@ -47,9 +47,4 @@ public class CardSnippet
     private LimitType limitType;
 
     private String imageUrl;
-
-    public void setType(Type type)
-    {
-        this.type = new TypeSnippet(type);
-    }
 }

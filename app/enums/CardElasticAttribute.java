@@ -10,7 +10,7 @@ public enum CardElasticAttribute
     NAME("name", FieldType.NORMAL),
     LEVEL("level", FieldType.NORMAL),
     ATTRIBUTE("attribute", FieldType.NORMAL),
-    TYPE("type", FieldType.NORMAL),
+    TYPE("type", FieldType.NESTED, "type.id", "type"),
     ATTACK("attack", FieldType.NORMAL),
     DEFENSE("defense", FieldType.NORMAL),
     CARD_TYPE("cardType", FieldType.NORMAL),
@@ -23,6 +23,18 @@ public enum CardElasticAttribute
 
     @Getter
     private FieldType type;
+
+    @Getter
+    private String nestedTerm;
+
+    @Getter
+    private String nestedLevel;
+
+    CardElasticAttribute(String name, FieldType fieldType)
+    {
+        this.name = name;
+        this.type = fieldType;
+    }
 
     public static CardElasticAttribute fromString(String label)
     {
