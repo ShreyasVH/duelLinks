@@ -92,7 +92,15 @@
         }
       },
       "rarity": {
-        "type": "keyword"
+        "type": "nested",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "keyword"
+          }
+        }
       },
       "limitType": {
         "type": "keyword"

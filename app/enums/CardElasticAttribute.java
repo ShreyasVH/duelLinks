@@ -15,7 +15,7 @@ public enum CardElasticAttribute
     DEFENSE("defense", FieldType.NORMAL),
     CARD_TYPE("cardType", FieldType.NESTED, "cardType.id", "cardType"),
     CARD_SUB_TYPES("cardSubTypes", FieldType.NESTED, "cardSubTypes.id", "cardSubTypes"),
-    RARITY("rarity", FieldType.NORMAL),
+    RARITY("rarity", FieldType.NESTED, "rarity.id", "rarity"),
     LIMIT_TYPE("limitType", FieldType.NORMAL);
 
     @Getter
