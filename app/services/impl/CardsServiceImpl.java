@@ -123,10 +123,10 @@ public class CardsServiceImpl implements CardsService
             cardSubTypeMaps = this.cardSubTypeMapDao.list(cardSubTypeMapFilterRequest);
         }
 
-        List<CardSubType> cardSubTypeList = new ArrayList<>();
+        List<CardSubTypeSnippet> cardSubTypeList = new ArrayList<>();
         for(CardSubTypeMap cardSubTypeMap: cardSubTypeMaps)
         {
-            cardSubTypeList.add(cardSubTypeMap.getCardSubType());
+            cardSubTypeList.add(new CardSubTypeSnippet(cardSubTypeMap.getCardSubType()));
         }
         cardSnippet.setCardSubTypes(cardSubTypeList);
 

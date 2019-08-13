@@ -81,7 +81,15 @@
         }
       },
       "cardSubTypes": {
-        "type": "keyword"
+        "type": "nested",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "keyword"
+          }
+        }
       },
       "rarity": {
         "type": "keyword"

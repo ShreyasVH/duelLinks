@@ -34,7 +34,7 @@ public class CardSnippet
 
     private CardTypeSnippet cardType;
 
-    private List<CardSubType> cardSubTypes;
+    private List<CardSubTypeSnippet> cardSubTypes;
 
     private Rarity rarity;
 

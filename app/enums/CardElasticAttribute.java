@@ -14,7 +14,7 @@ public enum CardElasticAttribute
     ATTACK("attack", FieldType.NORMAL),
     DEFENSE("defense", FieldType.NORMAL),
     CARD_TYPE("cardType", FieldType.NESTED, "cardType.id", "cardType"),
-    CARD_SUB_TYPE("cardSubType", FieldType.NORMAL),
+    CARD_SUB_TYPES("cardSubTypes", FieldType.NESTED, "cardSubTypes.id", "cardSubTypes"),
     RARITY("rarity", FieldType.NORMAL),
     LIMIT_TYPE("limitType", FieldType.NORMAL);
 
