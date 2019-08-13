@@ -5,15 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import enums.Attribute;
 import enums.CardSubType;
-import enums.CardType;
 import enums.LimitType;
 import enums.Rarity;
-import enums.Type;
-import models.Card;
-import models.CardSubTypeMap;
-import utils.Utils;
 
 import java.util.List;
 
@@ -38,7 +32,7 @@ public class CardSnippet
 
     private Integer defense;
 
-    private CardType cardType;
+    private CardTypeSnippet cardType;
 
     private List<CardSubType> cardSubTypes;
 
