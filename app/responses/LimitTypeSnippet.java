@@ -2,10 +2,12 @@ package responses;
 
 import enums.LimitType;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class LimitTypeSnippet
 {
     private Integer id;

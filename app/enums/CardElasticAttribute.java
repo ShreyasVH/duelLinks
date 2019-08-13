@@ -16,7 +16,7 @@ public enum CardElasticAttribute
     CARD_TYPE("cardType", FieldType.NESTED, "cardType.id", "cardType"),
     CARD_SUB_TYPES("cardSubTypes", FieldType.NESTED, "cardSubTypes.id", "cardSubTypes"),
     RARITY("rarity", FieldType.NESTED, "rarity.id", "rarity"),
-    LIMIT_TYPE("limitType", FieldType.NORMAL);
+    LIMIT_TYPE("limitType", FieldType.NESTED, "limitType.id", "limitType");
 
     @Getter
     private String name;

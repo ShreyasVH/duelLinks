@@ -112,7 +112,7 @@ public class CardsServiceImpl implements CardsService
         cardSnippet.setDefense(card.getDefense());
         cardSnippet.setCardType(new CardTypeSnippet(card.getCardType()));
         cardSnippet.setRarity(new RaritySnippet(card.getRarity()));
-        cardSnippet.setLimitType(card.getLimitType());
+        cardSnippet.setLimitType(new LimitTypeSnippet(card.getLimitType()));
         cardSnippet.setImageUrl(card.getImageUrl());
 
         CardSubTypeMapFilterRequest cardSubTypeMapFilterRequest = new CardSubTypeMapFilterRequest();

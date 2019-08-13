@@ -103,7 +103,15 @@
         }
       },
       "limitType": {
-        "type": "keyword"
+        "type": "nested",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "keyword"
+          }
+        }
       },
       "imageUrl": {
         "type": "text"

@@ -38,7 +38,7 @@ public class CardSnippet
 
     private RaritySnippet rarity;
 
-    private LimitType limitType;
+    private LimitTypeSnippet limitType;
 
     private String imageUrl;
 }
