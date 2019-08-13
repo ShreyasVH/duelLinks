@@ -18,4 +18,6 @@ public class CardsFilterRequest
     private Integer offset = 0;
 
     private Map<String, List<String>> filters = new HashMap<>();
+
+    private Map<String, Map<String, Long>> rangeFilters = new HashMap<>();
 }

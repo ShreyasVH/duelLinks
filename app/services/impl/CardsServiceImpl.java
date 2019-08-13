@@ -8,6 +8,7 @@ import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import play.libs.concurrent.HttpExecutionContext;
 import requests.CardRequest;
@@ -160,6 +161,39 @@ public class CardsServiceImpl implements CardsService
                     else if(FieldType.NESTED.equals(cardElasticAttribute.getType()))
                     {
                         query.must(QueryBuilders.nestedQuery(cardElasticAttribute.getNestedLevel(), QueryBuilders.termsQuery(cardElasticAttribute.getNestedTerm(), valueList), ScoreMode.None));
+                    }
+                }
+            }
+        }
+
+        Map<String, Map<String, Long>> rangeFilters = filterRequest.getRangeFilters();
+        if(!rangeFilters.isEmpty())
+        {
+            for(Map.Entry<String, Map<String, Long>> entry: rangeFilters.entrySet())
+            {
+                String key = entry.getKey();
+                Map<String, Long> valueMap = entry.getValue();
+                CardElasticAttribute cardElasticAttribute = CardElasticAttribute.fromString(key);
+                if(null != cardElasticAttribute)
+                {
+                    if(FieldType.RANGE.equals(cardElasticAttribute.getType()))
+                    {
+                        if(valueMap.containsKey("from") || valueMap.containsKey("to"))
+                        {
+                            RangeQueryBuilder rangeQueryBuilder = QueryBuilders.rangeQuery(key);
+
+                            if(valueMap.containsKey("from"))
+                            {
+                                rangeQueryBuilder.gte(valueMap.get("from"));
+                            }
+
+                            if(valueMap.containsKey("to"))
+                            {
+                                rangeQueryBuilder.lte(valueMap.get("to"));
+                            }
+
+                            query.must(rangeQueryBuilder);
+                        }
                     }
                 }
             }

@@ -11,7 +11,7 @@ public enum CardElasticAttribute
     LEVEL("level", FieldType.NORMAL),
     ATTRIBUTE("attribute", FieldType.NESTED, "attribute.id", "attribute"),
     TYPE("type", FieldType.NESTED, "type.id", "type"),
-    ATTACK("attack", FieldType.NORMAL),
+    ATTACK("attack", FieldType.RANGE),
     DEFENSE("defense", FieldType.NORMAL),
     CARD_TYPE("cardType", FieldType.NESTED, "cardType.id", "cardType"),
     CARD_SUB_TYPES("cardSubTypes", FieldType.NESTED, "cardSubTypes.id", "cardSubTypes"),
