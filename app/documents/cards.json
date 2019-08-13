@@ -42,7 +42,15 @@
         "type": "integer"
       },
       "attribute": {
-        "type": "keyword"
+        "type": "nested",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "keyword"
+          }
+        }
       },
       "type": {
         "type": "nested",

@@ -30,7 +30,7 @@ public class CardSnippet
 
     private Integer level;
 
-    private Attribute attribute;
+    private AttributeSnippet attribute;
 
     private TypeSnippet type;
 

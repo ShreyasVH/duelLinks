@@ -106,7 +106,7 @@ public class CardsServiceImpl implements CardsService
         cardSnippet.setId(card.getId());
         cardSnippet.setName(card.getName());
         cardSnippet.setLevel(card.getLevel());
-        cardSnippet.setAttribute(card.getAttribute());
+        cardSnippet.setAttribute(new AttributeSnippet(card.getAttribute()));
         cardSnippet.setType(new TypeSnippet(card.getType()));
         cardSnippet.setAttack(card.getAttack());
         cardSnippet.setDefense(card.getDefense());
