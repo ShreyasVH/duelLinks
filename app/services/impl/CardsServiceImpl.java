@@ -1,7 +1,15 @@
 package services.impl;
 
 import dao.CardSubTypeMapDao;
-import enums.*;
+import enums.Attribute;
+import enums.CardElasticAttribute;
+import enums.CardSubType;
+import enums.CardType;
+import enums.ElasticIndex;
+import enums.FieldType;
+import enums.LimitType;
+import enums.Rarity;
+import enums.Type;
 import models.Card;
 import models.CardSubTypeMap;
 import org.apache.lucene.search.join.ScoreMode;
@@ -10,11 +18,20 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.sort.SortOrder;
 import play.libs.concurrent.HttpExecutionContext;
 import requests.CardRequest;
 import requests.CardSubTypeMapFilterRequest;
 import requests.CardsFilterRequest;
-import responses.*;
+import responses.AttributeSnippet;
+import responses.CardFilterResponse;
+import responses.CardSnippet;
+import responses.CardSubTypeSnippet;
+import responses.CardTypeSnippet;
+import responses.ElasticResponse;
+import responses.LimitTypeSnippet;
+import responses.RaritySnippet;
+import responses.TypeSnippet;
 import services.CardsService;
 import com.google.inject.Inject;
 
@@ -199,8 +216,26 @@ public class CardsServiceImpl implements CardsService
                 }
             }
         }
-
         builder.query(query);
+
+        Map<String, SortOrder> sortMap = filterRequest.getSortMap();
+        for(Map.Entry<String, SortOrder> sortField: sortMap.entrySet())
+        {
+            String key = sortField.getKey();
+            SortOrder order = sortField.getValue();
+
+            CardElasticAttribute cardElasticAttribute = CardElasticAttribute.fromString(key);
+            if(null != cardElasticAttribute)
+            {
+                builder.sort(key, order);
+            }
+        }
+
+        if(!sortMap.containsKey("name"))
+        {
+            builder.sort("name", SortOrder.ASC);
+        }
+
         request.source(builder);
         return request;
     }
