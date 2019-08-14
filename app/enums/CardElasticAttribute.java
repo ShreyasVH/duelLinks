@@ -8,7 +8,7 @@ public enum CardElasticAttribute
 {
     ID("id", FieldType.NORMAL),
     NAME("name", FieldType.NORMAL),
-    LEVEL("level", FieldType.NORMAL),
+    LEVEL("level", FieldType.RANGE),
     ATTRIBUTE("attribute", FieldType.NESTED, "attribute.id", "attribute"),
     TYPE("type", FieldType.NESTED, "type.id", "type"),
     ATTACK("attack", FieldType.RANGE),
