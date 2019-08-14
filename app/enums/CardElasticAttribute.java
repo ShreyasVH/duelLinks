@@ -12,7 +12,7 @@ public enum CardElasticAttribute
     ATTRIBUTE("attribute", FieldType.NESTED, "attribute.id", "attribute"),
     TYPE("type", FieldType.NESTED, "type.id", "type"),
     ATTACK("attack", FieldType.RANGE),
-    DEFENSE("defense", FieldType.NORMAL),
+    DEFENSE("defense", FieldType.RANGE),
     CARD_TYPE("cardType", FieldType.NESTED, "cardType.id", "cardType"),
     CARD_SUB_TYPES("cardSubTypes", FieldType.NESTED, "cardSubTypes.id", "cardSubTypes"),
     RARITY("rarity", FieldType.NESTED, "rarity.id", "rarity"),
