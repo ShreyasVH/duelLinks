@@ -178,18 +178,18 @@ public class CardsServiceImpl implements CardsService
                 {
                     if(FieldType.RANGE.equals(cardElasticAttribute.getType()))
                     {
-                        if(valueMap.containsKey("from") || valueMap.containsKey("to"))
+                        if(valueMap.containsKey("min") || valueMap.containsKey("max"))
                         {
                             RangeQueryBuilder rangeQueryBuilder = QueryBuilders.rangeQuery(key);
 
-                            if(valueMap.containsKey("from"))
+                            if(valueMap.containsKey("min"))
                             {
-                                rangeQueryBuilder.gte(valueMap.get("from"));
+                                rangeQueryBuilder.gte(valueMap.get("min"));
                             }
 
-                            if(valueMap.containsKey("to"))
+                            if(valueMap.containsKey("max"))
                             {
-                                rangeQueryBuilder.lte(valueMap.get("to"));
+                                rangeQueryBuilder.lte(valueMap.get("max"));
                             }
 
                             query.must(rangeQueryBuilder);
