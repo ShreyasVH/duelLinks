@@ -57,5 +57,5 @@ public class Card extends BaseModel
     private LimitType limitType;
 
     @Column(name = "image_url")
-    private String imageUrl;
+    private String imageUrl = "";
 }

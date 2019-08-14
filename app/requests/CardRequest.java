@@ -41,7 +41,7 @@ public class CardRequest
 
     private LimitType limitType;
 
-    private String imageUrl = "";
+    private String imageUrl;
 
     public void validate()
     {
