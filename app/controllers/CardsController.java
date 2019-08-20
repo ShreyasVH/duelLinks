@@ -69,7 +69,7 @@ public class CardsController extends BaseController
 
     public CompletionStage<Result> index(Long id)
     {
-        return cardsService.index(id).thenApplyAsync(response -> ok(Json.toJson(response)));
+        return cardsService.index(id).thenApplyAsync(response -> ok(Json.toJson(response)), httpExecutionContext.current());
     }
 
     public CompletionStage<Result> create()

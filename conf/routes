@@ -17,3 +17,5 @@ POST    /cards/filters                                      controllers.CardsCon
 GET     /cards/index/:id                                    controllers.CardsController.index(id: Long)
 POST    /cards                                              controllers.CardsController.create()
 PUT     /cards                                              controllers.CardsController.update(request: Request)
+
+POST    /cards/myCards                                      controllers.MyCardsController.create(request: Request)

@@ -2,24 +2,23 @@ package dao;
 
 import com.google.inject.Inject;
 import customContexts.DatabaseExecutionContext;
-import io.ebean.EbeanServer;
 import io.ebean.Ebean;
-import io.ebean.Query;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
-
-import models.Card;
+import io.ebean.EbeanServer;
+import models.MyCard;
 import play.db.ebean.EbeanConfig;
 import play.db.ebean.EbeanDynamicEvolutions;
 
-public class CardsDao
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
+
+public class MyCardsDao
 {
     private final EbeanServer db;
     private final EbeanDynamicEvolutions ebeanDynamicEvolutions;
     private final DatabaseExecutionContext databaseExecutionContext;
 
     @Inject
-    public CardsDao
+    public MyCardsDao
     (
         EbeanConfig ebeanConfig,
         EbeanDynamicEvolutions ebeanDynamicEvolutions,
@@ -31,35 +30,18 @@ public class CardsDao
         this.databaseExecutionContext = databaseExecutionContext;
     }
 
-    public CompletionStage<Card> get(Long id)
+    public CompletionStage<MyCard> save(MyCard myCard)
     {
         return CompletableFuture.supplyAsync(() -> {
-            Card card = null;
-
-            Query<Card> query = this.db.find(Card.class);
             try
             {
-                card = query.where().eq("id", id).findOne();
+                this.db.save(myCard);
             }
             catch(Exception ex)
             {
                 String sh = "sh";
             }
-
-            return card;
+            return myCard;
         }, databaseExecutionContext);
-    }
-
-    public Card save(Card card)
-    {
-        try
-        {
-            this.db.save(card);
-        }
-        catch(Exception ex)
-        {
-            String sh = "sh";
-        }
-        return card;
     }
 }
