@@ -19,21 +19,28 @@ import requests.CardsFilterRequest;
 import responses.AttributeSnippet;
 import responses.CardSnippet;
 import services.CardsService;
+import services.MyCardsService;
 import utils.Utils;
 
 public class CardsController extends BaseController
 {
     private final CardsService cardsService;
+    private final MyCardsService myCardsService;
+
     private final HttpExecutionContext httpExecutionContext;
 
     @Inject
     public CardsController
     (
         CardsService cardsService,
+        MyCardsService myCardsService,
+
         HttpExecutionContext httpExecutionContext
     )
     {
         this.cardsService = cardsService;
+        this.myCardsService = myCardsService;
+
         this.httpExecutionContext = httpExecutionContext;
     }
 
@@ -69,7 +76,10 @@ public class CardsController extends BaseController
 
     public CompletionStage<Result> index(Long id)
     {
-        return cardsService.index(id).thenApplyAsync(response -> ok(Json.toJson(response)), httpExecutionContext.current());
+        return cardsService.index(id, httpExecutionContext).thenApplyAsync(response -> {
+            CompletableFuture.supplyAsync(() -> myCardsService.index(id, httpExecutionContext));
+            return ok(Json.toJson(response));
+        }, httpExecutionContext.current());
     }
 
     public CompletionStage<Result> create()

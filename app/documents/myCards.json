@@ -1,0 +1,152 @@
+{
+  "settings": {
+    "index": {
+      "number_of_shards": "2",
+      "max_ngram_diff": "10",
+      "analysis": {
+        "analyzer": {
+          "my_analyzer": {
+            "filter": [
+              "lowercase"
+            ],
+            "tokenizer": "my_tokenizer"
+          },
+          "my_search_analyzer": {
+            "tokenizer": "lowercase"
+          }
+        },
+        "tokenizer": {
+          "my_tokenizer": {
+            "token_chars": [
+              "letter",
+              "digit"
+            ],
+            "min_gram": "2",
+            "type": "ngram",
+            "max_gram": "10"
+          }
+        }
+      },
+      "number_of_replicas": "1"
+    }
+  },
+  "mappings": {
+    "properties": {
+      "id": {
+        "type": "long"
+      },
+      "card": {
+        "type": "nested",
+        "properties": {
+          "id": {
+            "type": "long"
+          },
+          "name": {
+            "type": "keyword"
+          },
+          "description": {
+            "type": "keyword"
+          },
+          "level": {
+            "type": "integer"
+          },
+          "attribute": {
+            "type": "nested",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "name": {
+                "type": "keyword"
+              }
+            }
+          },
+          "type": {
+            "type": "nested",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "name": {
+                "type": "keyword"
+              }
+            }
+          },
+          "attack": {
+            "type": "integer"
+          },
+          "defense": {
+            "type": "integer"
+          },
+          "cardType": {
+            "type": "nested",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "name": {
+                "type": "keyword"
+              }
+            }
+          },
+          "cardSubTypes": {
+            "type": "nested",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "name": {
+                "type": "keyword"
+              }
+            }
+          },
+          "rarity": {
+            "type": "nested",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "name": {
+                "type": "keyword"
+              }
+            }
+          },
+          "limitType": {
+            "type": "nested",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "name": {
+                "type": "keyword"
+              }
+            }
+          },
+          "imageUrl": {
+            "type": "text"
+          }
+        }
+      },
+      "glossTypeStats": {
+        "type": "nested",
+        "properties": {
+          "NORMAL": {
+            "type": "integer"
+          },
+          "GLOSSY": {
+            "type": "integer"
+          },
+          "PRISMATIC": {
+            "type": "integer"
+          }
+        }
+      },
+      "firstObtainedDate": {
+        "type": "date"
+      },
+      "lastObtainedDate": {
+        "type": "date"
+      }
+    }
+  }
+}

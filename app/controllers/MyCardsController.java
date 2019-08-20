@@ -9,6 +9,7 @@ import requests.MyCardRequest;
 import services.MyCardsService;
 import utils.Utils;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 public class MyCardsController extends BaseController
@@ -40,6 +41,15 @@ public class MyCardsController extends BaseController
         {
             String sh = "sh";
         }
-        return myCardsService.create(myCardRequest).thenApplyAsync(card -> ok(Json.toJson(card)), httpExecutionContext.current());
+        return myCardsService.create(myCardRequest).thenApplyAsync(card -> {
+            CompletableFuture.supplyAsync(() -> myCardsService.index(card.getCardId(), httpExecutionContext));
+
+            return ok(Json.toJson(card));
+        }, httpExecutionContext.current());
+    }
+
+    public CompletionStage<Result> index(Long cardId)
+    {
+        return myCardsService.index(cardId, this.httpExecutionContext).thenApplyAsync(myCardSnippet -> ok(Json.toJson(myCardSnippet)), httpExecutionContext.current());
     }
 }

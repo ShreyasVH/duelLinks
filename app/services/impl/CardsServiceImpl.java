@@ -45,6 +45,7 @@ import java.util.concurrent.CompletionStage;
 
 import dao.CardsDao;
 import services.ElasticService;
+import services.MyCardsService;
 import utils.Utils;
 
 public class CardsServiceImpl implements CardsService
@@ -59,6 +60,7 @@ public class CardsServiceImpl implements CardsService
     (
         CardsDao cardsDao,
         CardSubTypeMapDao cardSubTypeMapDao,
+
         ElasticService elasticService
     )
     {
@@ -100,7 +102,7 @@ public class CardsServiceImpl implements CardsService
     }
 
     @Override
-    public CompletionStage<Boolean> index(Long id)
+    public CompletionStage<Boolean> index(Long id, HttpExecutionContext httpExecutionContext)
     {
         CompletionStage<Card> cardResponse = this.cardsDao.get(id);
         return cardResponse.thenApplyAsync(card -> {
@@ -110,7 +112,7 @@ public class CardsServiceImpl implements CardsService
                 isSuccess = elasticService.index(ElasticIndex.CARDS, id.toString(), cardSnippet(card));
             }
             return isSuccess;
-        });
+        }, httpExecutionContext.current());
     }
 
     private CardSnippet cardSnippet(Card card)
@@ -338,7 +340,7 @@ public class CardsServiceImpl implements CardsService
             this.cardSubTypeMapDao.create(cardSubTypeMaps);
             cardSnippet = this.cardSnippet(card, cardSubTypeMaps);
 
-            CompletableFuture.supplyAsync(() -> index(cardForAsyncProcess.getId()));
+            CompletableFuture.supplyAsync(() -> index(cardForAsyncProcess.getId(), httpExecutionContext));
         }
         return cardSnippet;
     }
@@ -408,7 +410,7 @@ public class CardsServiceImpl implements CardsService
                     cardSnippet = this.cardSnippet(card, updatedCardSubTypeMaps);
                 }
 
-                CompletableFuture.supplyAsync(() -> index(cardForAsyncProcess.getId()));
+                CompletableFuture.supplyAsync(() -> index(cardForAsyncProcess.getId(), httpExecutionContext));
             }
             return cardSnippet;
         }, httpExecutionContext.current());

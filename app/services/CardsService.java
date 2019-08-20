@@ -14,7 +14,7 @@ public interface CardsService
 
     CardFilterResponse getWithFilters(CardsFilterRequest filterRequest);
 
-    CompletionStage<Boolean> index(Long id);
+    CompletionStage<Boolean> index(Long id, HttpExecutionContext httpExecutionContext);
 
     CardSnippet create(CardRequest request, HttpExecutionContext httpExecutionContext);
 
