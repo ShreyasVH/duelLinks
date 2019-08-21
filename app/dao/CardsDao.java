@@ -31,23 +31,21 @@ public class CardsDao
         this.databaseExecutionContext = databaseExecutionContext;
     }
 
-    public CompletionStage<Card> get(Long id)
+    public Card get(Long id)
     {
-        return CompletableFuture.supplyAsync(() -> {
-            Card card = null;
+        Card card = null;
 
-            Query<Card> query = this.db.find(Card.class);
-            try
-            {
-                card = query.where().eq("id", id).findOne();
-            }
-            catch(Exception ex)
-            {
-                String sh = "sh";
-            }
+        Query<Card> query = this.db.find(Card.class);
+        try
+        {
+            card = query.where().eq("id", id).findOne();
+        }
+        catch(Exception ex)
+        {
+            String sh = "sh";
+        }
 
-            return card;
-        }, databaseExecutionContext);
+        return card;
     }
 
     public Card save(Card card)

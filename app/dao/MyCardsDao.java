@@ -32,36 +32,32 @@ public class MyCardsDao
         this.databaseExecutionContext = databaseExecutionContext;
     }
 
-    public CompletionStage<MyCard> save(MyCard myCard)
+    public MyCard save(MyCard myCard)
     {
-        return CompletableFuture.supplyAsync(() -> {
-            try
-            {
-                this.db.save(myCard);
-            }
-            catch(Exception ex)
-            {
-                String sh = "sh";
-            }
-            return myCard;
-        }, databaseExecutionContext);
+        try
+        {
+            this.db.save(myCard);
+        }
+        catch(Exception ex)
+        {
+            String sh = "sh";
+        }
+        return myCard;
     }
 
-    public CompletionStage<List<MyCard>> getByCardId(Long cardId)
+    public List<MyCard> getByCardId(Long cardId)
     {
-        return CompletableFuture.supplyAsync(() -> {
-            List<MyCard> cards = new ArrayList<>();
+        List<MyCard> cards = new ArrayList<>();
 
-            try
-            {
-                cards = this.db.find(MyCard.class).where().eq("cardId", cardId).orderBy("obtainedDate DESC").findList();
-            }
-            catch(Exception ex)
-            {
-                String sh = "sh";
-            }
+        try
+        {
+            cards = this.db.find(MyCard.class).where().eq("cardId", cardId).orderBy("obtainedDate DESC").findList();
+        }
+        catch(Exception ex)
+        {
+            String sh = "sh";
+        }
 
-            return cards;
-        }, databaseExecutionContext);
+        return cards;
     }
 }

@@ -118,6 +118,43 @@
       },
       "imageUrl": {
         "type": "text"
+      },
+      "glossTypeStats": {
+        "type": "nested",
+        "properties": {
+          "NORMAL": {
+            "type": "integer"
+          },
+          "GLOSSY": {
+            "type": "integer"
+          },
+          "PRISMATIC": {
+            "type": "integer"
+          }
+        }
+      },
+      "firstObtainedDate": {
+        "type": "date"
+      },
+      "lastObtainedDate": {
+        "type": "date"
+      },
+      "individualCards": {
+        "type": "nested",
+        "properties": {
+          "id": {
+            "type": "long"
+          },
+          "cardId": {
+            "type": "long"
+          },
+          "glossType": {
+            "type": "integer"
+          },
+          "obtainedDate": {
+            "type": "date"
+          }
+        }
       }
     }
   }

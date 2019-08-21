@@ -9,23 +9,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import java.util.function.Supplier;
 
 import play.libs.concurrent.HttpExecutionContext;
 import play.libs.Json;
 
 import requests.CardRequest;
 import requests.CardsFilterRequest;
-import responses.AttributeSnippet;
 import responses.CardSnippet;
 import services.CardsService;
-import services.MyCardsService;
 import utils.Utils;
 
 public class CardsController extends BaseController
 {
     private final CardsService cardsService;
-    private final MyCardsService myCardsService;
 
     private final HttpExecutionContext httpExecutionContext;
 
@@ -33,13 +29,11 @@ public class CardsController extends BaseController
     public CardsController
     (
         CardsService cardsService,
-        MyCardsService myCardsService,
 
         HttpExecutionContext httpExecutionContext
     )
     {
         this.cardsService = cardsService;
-        this.myCardsService = myCardsService;
 
         this.httpExecutionContext = httpExecutionContext;
     }
@@ -76,10 +70,7 @@ public class CardsController extends BaseController
 
     public CompletionStage<Result> index(Long id)
     {
-        return cardsService.index(id, httpExecutionContext).thenApplyAsync(response -> {
-            CompletableFuture.supplyAsync(() -> myCardsService.index(id, httpExecutionContext));
-            return ok(Json.toJson(response));
-        }, httpExecutionContext.current());
+        return CompletableFuture.supplyAsync(() -> ok(Json.toJson(cardsService.index(id))), httpExecutionContext.current());
     }
 
     public CompletionStage<Result> create()
@@ -94,23 +85,24 @@ public class CardsController extends BaseController
             {
                 String sh = "sh";
             }
-            return cardsService.create(request, httpExecutionContext);
+            return cardsService.create(request);
         }, httpExecutionContext.current()).thenApplyAsync(response -> ok(Json.toJson(response)), httpExecutionContext.current());
     }
 
     public CompletionStage<Result> update(Http.Request request)
     {
-        CardRequest cardRequest = null;
-        try
-        {
-            cardRequest = Utils.convertObject(request.body().asJson(), CardRequest.class);
-        }
-        catch(Exception ex)
-        {
-            String sh = "sh";
-        }
-        CompletionStage<CardSnippet> promise = cardsService.update(cardRequest, httpExecutionContext);
-        return promise.thenApplyAsync(response -> ok(formatResponse(response)), httpExecutionContext.current());
+        return CompletableFuture.supplyAsync(() -> {
+            CardRequest cardRequest = null;
+            try
+            {
+                cardRequest = Utils.convertObject(request.body().asJson(), CardRequest.class);
+            }
+            catch(Exception ex)
+            {
+                String sh = "sh";
+            }
+            return cardsService.update(cardRequest);
+        }, httpExecutionContext.current()).thenApplyAsync(cardSnippet -> ok(Json.toJson(cardSnippet)), httpExecutionContext.current());
     }
 
     public CompletionStage<Result> getAttributes()

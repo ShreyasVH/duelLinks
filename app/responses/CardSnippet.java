@@ -8,8 +8,11 @@ import lombok.Setter;
 import enums.CardSubType;
 import enums.LimitType;
 import enums.Rarity;
+import models.MyCard;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 
 @Getter
@@ -43,4 +46,12 @@ public class CardSnippet
     private LimitTypeSnippet limitType;
 
     private String imageUrl;
+
+    private Map<String, Integer> glossTypeStats;
+
+    private Date firstObtainedDate;
+
+    private Date lastObtainedDate;
+
+    private List<MyCard> individualCards;
 }

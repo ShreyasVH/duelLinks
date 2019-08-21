@@ -3,10 +3,16 @@ package services;
 import play.libs.concurrent.HttpExecutionContext;
 import requests.CardRequest;
 import requests.CardsFilterRequest;
-import responses.*;
+import responses.AttributeSnippet;
+import responses.CardFilterResponse;
+import responses.CardSnippet;
+import responses.CardSubTypeSnippet;
+import responses.CardTypeSnippet;
+import responses.LimitTypeSnippet;
+import responses.RaritySnippet;
+import responses.TypeSnippet;
 
 import java.util.List;
-import java.util.concurrent.CompletionStage;
 
 public interface CardsService
 {
@@ -14,11 +20,11 @@ public interface CardsService
 
     CardFilterResponse getWithFilters(CardsFilterRequest filterRequest);
 
-    CompletionStage<Boolean> index(Long id, HttpExecutionContext httpExecutionContext);
+    Boolean index(Long id);
 
-    CardSnippet create(CardRequest request, HttpExecutionContext httpExecutionContext);
+    CardSnippet create(CardRequest request);
 
-    CompletionStage<CardSnippet> update(CardRequest request, HttpExecutionContext httpExecutionContext);
+    CardSnippet update(CardRequest request);
 
     List<AttributeSnippet> getAttributes();
 
