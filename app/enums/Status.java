@@ -20,5 +20,7 @@ public enum Status
     @EnumValue("3")
     DELETED(3);
 
+    @Getter
+    @Setter
     private int value;
 }

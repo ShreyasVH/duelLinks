@@ -149,10 +149,26 @@
             "type": "long"
           },
           "glossType": {
-            "type": "integer"
+            "type": "nested",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "name": {
+                "type": "keyword"
+              }
+            }
           },
           "status": {
-            "type": "integer"
+            "type": "nested",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "name": {
+                "type": "keyword"
+              }
+            }
           },
           "obtainedDate": {
             "type": "date"

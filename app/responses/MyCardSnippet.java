@@ -3,10 +3,9 @@ package responses;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import models.MyCard;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 @Getter
 @Setter
@@ -14,8 +13,17 @@ import java.util.Map;
 public class MyCardSnippet
 {
     private Long id;
-    private CardSnippet card;
-    private Date firstObtainedDate;
-    private Date lastObtainedDate;
-    private Map<String, Integer> glossTypeStats = new HashMap<>();
+    private Long cardId;
+    private CardGlossTypeSnippet cardGlossType;
+    private StatusSnippet status;
+    private Date obtainedDate;
+
+    public MyCardSnippet(MyCard myCard)
+    {
+        this.id = myCard.getId();
+        this.cardId = myCard.getCardId();
+        this.cardGlossType = new CardGlossTypeSnippet(myCard.getCardGlossType());
+        this.status = new StatusSnippet(myCard.getStatus());
+        this.obtainedDate = myCard.getObtainedDate();
+    }
 }

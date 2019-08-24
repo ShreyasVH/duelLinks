@@ -5,10 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import enums.CardSubType;
-import enums.LimitType;
-import enums.Rarity;
-import models.MyCard;
 
 import java.util.Date;
 import java.util.List;
@@ -53,5 +49,5 @@ public class CardSnippet
 
     private Date lastObtainedDate;
 
-    private List<MyCard> individualCards;
+    private List<MyCardSnippet> individualCards;
 }

@@ -2,7 +2,16 @@ package services.impl;
 
 import dao.CardSubTypeMapDao;
 import dao.MyCardsDao;
-import enums.*;
+import enums.Attribute;
+import enums.CardElasticAttribute;
+import enums.CardGlossType;
+import enums.CardSubType;
+import enums.CardType;
+import enums.ElasticIndex;
+import enums.FieldType;
+import enums.LimitType;
+import enums.Rarity;
+import enums.Type;
 import models.Card;
 import models.CardSubTypeMap;
 import models.MyCard;
@@ -23,6 +32,7 @@ import responses.CardSubTypeSnippet;
 import responses.CardTypeSnippet;
 import responses.ElasticResponse;
 import responses.LimitTypeSnippet;
+import responses.MyCardSnippet;
 import responses.RaritySnippet;
 import responses.TypeSnippet;
 import services.CardsService;
@@ -193,7 +203,13 @@ public class CardsServiceImpl implements CardsService
         {
             myCards = this.myCardsDao.getByCardId(card.getId());
         }
-        cardSnippet.setIndividualCards(myCards);
+        List<MyCardSnippet> individualCards = new ArrayList<>();
+        for(MyCard myCard: myCards)
+        {
+            MyCardSnippet myCardSnippet = new MyCardSnippet(myCard);
+            individualCards.add(myCardSnippet);
+        }
+        cardSnippet.setIndividualCards(individualCards);
 
         cardSnippet.setGlossTypeStats(this.getGlossTypeStatsMap(myCards));
 
