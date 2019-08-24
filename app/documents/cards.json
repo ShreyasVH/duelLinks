@@ -151,6 +151,9 @@
           "glossType": {
             "type": "integer"
           },
+          "status": {
+            "type": "integer"
+          },
           "obtainedDate": {
             "type": "date"
           }

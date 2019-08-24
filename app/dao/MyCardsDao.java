@@ -2,6 +2,7 @@ package dao;
 
 import com.google.inject.Inject;
 import customContexts.DatabaseExecutionContext;
+import enums.Status;
 import io.ebean.Ebean;
 import io.ebean.EbeanServer;
 import models.MyCard;
@@ -10,8 +11,7 @@ import play.db.ebean.EbeanDynamicEvolutions;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
+
 
 public class MyCardsDao
 {
@@ -51,7 +51,7 @@ public class MyCardsDao
 
         try
         {
-            cards = this.db.find(MyCard.class).where().eq("cardId", cardId).orderBy("obtainedDate DESC").findList();
+            cards = this.db.find(MyCard.class).where().eq("cardId", cardId).eq("status", Status.ENABLED).orderBy("obtainedDate DESC").findList();
         }
         catch(Exception ex)
         {

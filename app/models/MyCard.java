@@ -1,6 +1,7 @@
 package models;
 
 import enums.CardGlossType;
+import enums.Status;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,6 +28,9 @@ public class MyCard
 
     @Column(name = "gloss_type")
     private CardGlossType cardGlossType;
+
+    @Column(name = "status")
+    private Status status;
 
     @Column(name = "obtained_date")
     private Date obtainedDate;
