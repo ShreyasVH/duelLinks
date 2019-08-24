@@ -3,6 +3,11 @@ package services.impl;
 import com.google.inject.Inject;
 import enums.ElasticIndex;
 import org.apache.http.HttpHost;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.elasticsearch.action.DocWriteResponse.Result;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
@@ -10,6 +15,7 @@ import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.search.SearchHit;
@@ -33,11 +39,35 @@ public class ElasticServiceImpl implements ElasticService
     {
         if(null == client)
         {
-            client = new RestHighLevelClient(
-                RestClient.builder(
-                    new HttpHost(System.getenv("ELASTIC_IP_HTTP"), Integer.parseInt(System.getenv("ELASTIC_PORT_HTTP")), "http")
-                )
-            );
+            try
+            {
+
+                RestClientBuilder builder = RestClient.builder(
+                    new HttpHost(System.getenv("ELASTIC_IP_HTTP"), Integer.parseInt(System.getenv("ELASTIC_PORT_HTTP")), System.getenv("ELASTIC_SCHEME"))
+                );
+
+
+                if(1 == Integer.parseInt(System.getenv("ELASTIC_USE_CREDENTIALS")))
+                {
+                    final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+                    credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(System.getenv("ELASTIC_USERNAME"), System.getenv("ELASTIC_PASSWORD")));
+
+                    builder.setHttpClientConfigCallback(new RestClientBuilder.HttpClientConfigCallback() {
+                        @Override
+                        public HttpAsyncClientBuilder customizeHttpClient(
+                                HttpAsyncClientBuilder httpClientBuilder) {
+                            return httpClientBuilder
+                                    .setDefaultCredentialsProvider(credentialsProvider);
+                        }
+                    });
+                }
+
+                client = new RestHighLevelClient(builder);
+            }
+            catch(Exception ex)
+            {
+                String sh = "sh";
+            }
         }
     }
 
@@ -62,7 +92,7 @@ public class ElasticServiceImpl implements ElasticService
 
             elasticResponse.setDocuments(documents);
         }
-        catch(IOException ex)
+        catch(Exception ex)
         {
             String sh = "sh";
         }

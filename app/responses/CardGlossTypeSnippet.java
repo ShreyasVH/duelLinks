@@ -2,10 +2,12 @@ package responses;
 
 import enums.CardGlossType;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class CardGlossTypeSnippet
 {
     private Integer id;
