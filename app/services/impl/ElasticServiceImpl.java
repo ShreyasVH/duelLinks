@@ -52,14 +52,7 @@ public class ElasticServiceImpl implements ElasticService
                     final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
                     credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(System.getenv("ELASTIC_USERNAME"), System.getenv("ELASTIC_PASSWORD")));
 
-                    builder.setHttpClientConfigCallback(new RestClientBuilder.HttpClientConfigCallback() {
-                        @Override
-                        public HttpAsyncClientBuilder customizeHttpClient(
-                                HttpAsyncClientBuilder httpClientBuilder) {
-                            return httpClientBuilder
-                                    .setDefaultCredentialsProvider(credentialsProvider);
-                        }
-                    });
+                    builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider));
                 }
 
                 client = new RestHighLevelClient(builder);
