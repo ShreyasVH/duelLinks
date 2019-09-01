@@ -1,29 +1,36 @@
 package responses;
 
+import enums.SourceType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import models.SourceCardMap;
 import models.Source;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class SourceSnippet
+public class SourceResponse
 {
     private Long id;
     private String name;
-    private SourceTypeSnippet sourceTypeSnippet;
+    private SourceType type;
+    private Integer quantity;
     private Date expiry;
     private Date createdDate;
+    private List<SourceCardMap> cards;
 
-    public SourceSnippet(Source source)
+    public SourceResponse(Source source, List<SourceCardMap> sourceCardMaps)
     {
         this.id = source.getId();
         this.name = source.getName();
-        this.sourceTypeSnippet = new SourceTypeSnippet(source.getType());
+        this.type = source.getType();
+        this.quantity = source.getQuantity();
         this.expiry = source.getExpiry();
         this.createdDate = source.getCreatedDate();
+        this.cards = sourceCardMaps;
     }
 }

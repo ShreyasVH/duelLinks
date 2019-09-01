@@ -173,7 +173,7 @@
           "obtainedDate": {
             "type": "date"
           },
-          "source": {
+          "sources": {
             "type": "nested",
             "properties": {
               "id": {
@@ -186,18 +186,18 @@
                 "type": "nested",
                 "properties": {
                   "id": {
-                    "type": "interger"
+                    "type": "integer"
                   },
                   "name": {
                     "type": "keyword"
                   }
-                },
-                "expiry": {
-                  "type": "date"
-                },
-                "createdDate": {
-                  "type": "date"
                 }
+              },
+              "expiry": {
+                "type": "date"
+              },
+              "createdDate": {
+                "type": "date"
               }
             }
           }

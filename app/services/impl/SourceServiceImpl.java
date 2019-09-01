@@ -8,7 +8,7 @@ import models.Source;
 import requests.SourceCardMapFilterRequest;
 import requests.SourceFilterRequest;
 import requests.SourceRequest;
-import responses.SourceSnippet;
+import responses.SourceResponse;
 import services.SourceService;
 
 import java.text.SimpleDateFormat;
@@ -33,9 +33,9 @@ public class SourceServiceImpl implements SourceService
     }
 
     @Override
-    public SourceSnippet create(SourceRequest request)
+    public SourceResponse create(SourceRequest request)
     {
-        SourceSnippet sourceSnippet = null;
+        SourceResponse sourceResponse = null;
         Source source = new Source();
         source.setName(request.getName());
         source.setQuantity(request.getQuantity());
@@ -74,16 +74,16 @@ public class SourceServiceImpl implements SourceService
 
             List<SourceCardMap> sourceCardMapList = this.cardSourceMapDao.save(sourceCardMaps);
 
-            sourceSnippet = new SourceSnippet(createdSource, sourceCardMapList);
+            sourceResponse = new SourceResponse(createdSource, sourceCardMapList);
         }
 
-        return sourceSnippet;
+        return sourceResponse;
     }
 
     @Override
-    public SourceSnippet update(SourceRequest request)
+    public SourceResponse update(SourceRequest request)
     {
-        SourceSnippet sourceSnippet = null;
+        SourceResponse sourceResponse = null;
         Source existingSource = this.sourceDao.getById(request.getId());
         if(null != existingSource)
         {
@@ -123,7 +123,7 @@ public class SourceServiceImpl implements SourceService
                 cardMapFilterRequest.setId(existingSource.getId());
 
                 List<SourceCardMap> existingCards = this.cardSourceMapDao.get(cardMapFilterRequest);
-                sourceSnippet = new SourceSnippet(existingSource, existingCards);
+                sourceResponse = new SourceResponse(existingSource, existingCards);
 
                 if(null != request.getCards())
                 {
@@ -169,12 +169,12 @@ public class SourceServiceImpl implements SourceService
                         this.cardSourceMapDao.delete(cardsToRemove);
                     }
 
-                    sourceSnippet.setCards(updatedCards);
+                    sourceResponse.setCards(updatedCards);
                 }
             }
         }
 
-        return sourceSnippet;
+        return sourceResponse;
     }
 
     @Override
@@ -221,9 +221,9 @@ public class SourceServiceImpl implements SourceService
     }
 
     @Override
-    public SourceSnippet get(Long sourceId)
+    public SourceResponse get(Long sourceId)
     {
-        SourceSnippet sourceSnippet = null;
+        SourceResponse sourceResponse = null;
 
         Source existingSource = this.sourceDao.getById(sourceId);
         if(null != existingSource)
@@ -232,10 +232,10 @@ public class SourceServiceImpl implements SourceService
             request.setId(sourceId);
 
             List<SourceCardMap> cardMaps = this.cardSourceMapDao.get(request);
-            sourceSnippet = new SourceSnippet(existingSource, cardMaps);
+            sourceResponse = new SourceResponse(existingSource, cardMaps);
         }
 
-        return sourceSnippet;
+        return sourceResponse;
     }
 
     @Override

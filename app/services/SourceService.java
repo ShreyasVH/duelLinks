@@ -2,21 +2,21 @@ package services;
 
 import models.Source;
 import requests.SourceRequest;
-import responses.SourceSnippet;
+import responses.SourceResponse;
 
 import java.util.List;
 
 public interface SourceService
 {
-    SourceSnippet create(SourceRequest request);
+    SourceResponse create(SourceRequest request);
 
-    SourceSnippet update(SourceRequest request);
+    SourceResponse update(SourceRequest request);
 
     boolean obtain(Long sourceId);
 
     boolean redeem(Long sourceId);
 
-    SourceSnippet get(Long sourceId);
+    SourceResponse get(Long sourceId);
 
     List<Source> getAll();
 }

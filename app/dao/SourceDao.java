@@ -62,6 +62,8 @@ public class SourceDao
             expressionList.ge("expiry", (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(new Date()));
         }
 
+        expressionList.order("expiry ASC, id ASC");
+
         return expressionList;
     }
 

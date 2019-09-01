@@ -50,4 +50,6 @@ public class CardSnippet
     private Date lastObtainedDate;
 
     private List<MyCardSnippet> individualCards;
+
+    private List<SourceSnippet> sources;
 }

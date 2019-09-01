@@ -49,7 +49,7 @@ public class SourceController
             }
 
             return this.sourceService.create(sourceRequest);
-        }, this.httpExecutionContext.current()).thenApplyAsync(sourceSnippet -> ok(Json.toJson(sourceSnippet)), this.httpExecutionContext.current());
+        }, this.httpExecutionContext.current()).thenApplyAsync(sourceResponse -> ok(Json.toJson(sourceResponse)), this.httpExecutionContext.current());
     }
 
     public CompletionStage<Result> update(Http.Request request)
@@ -66,7 +66,7 @@ public class SourceController
             }
 
             return this.sourceService.update(sourceRequest);
-        }, this.httpExecutionContext.current()).thenApplyAsync(sourceSnippet -> ok(Json.toJson(sourceSnippet)), this.httpExecutionContext.current());
+        }, this.httpExecutionContext.current()).thenApplyAsync(sourceResponse -> ok(Json.toJson(sourceResponse)), this.httpExecutionContext.current());
     }
 
     public CompletionStage<Result> obtain(Long id)
@@ -89,7 +89,7 @@ public class SourceController
 
     public CompletionStage<Result> get(Long id)
     {
-        return CompletableFuture.supplyAsync(() -> this.sourceService.get(id), this.httpExecutionContext.current()).thenApplyAsync(sourceSnippet -> ok(Json.toJson(sourceSnippet)), this.httpExecutionContext.current());
+        return CompletableFuture.supplyAsync(() -> this.sourceService.get(id), this.httpExecutionContext.current()).thenApplyAsync(sourceResponse -> ok(Json.toJson(sourceResponse)), this.httpExecutionContext.current());
     }
 
     public CompletionStage<Result> getAll()

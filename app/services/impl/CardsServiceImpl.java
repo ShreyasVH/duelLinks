@@ -1,7 +1,6 @@
 package services.impl;
 
-import dao.CardSubTypeMapDao;
-import dao.MyCardsDao;
+import dao.*;
 import enums.Attribute;
 import enums.CardElasticAttribute;
 import enums.CardGlossType;
@@ -12,9 +11,7 @@ import enums.FieldType;
 import enums.LimitType;
 import enums.Rarity;
 import enums.Type;
-import models.Card;
-import models.CardSubTypeMap;
-import models.MyCard;
+import models.*;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.index.query.BoolQueryBuilder;
@@ -25,16 +22,8 @@ import org.elasticsearch.search.sort.SortOrder;
 import requests.CardRequest;
 import requests.CardSubTypeMapFilterRequest;
 import requests.CardsFilterRequest;
-import responses.AttributeSnippet;
-import responses.CardFilterResponse;
-import responses.CardSnippet;
-import responses.CardSubTypeSnippet;
-import responses.CardTypeSnippet;
-import responses.ElasticResponse;
-import responses.LimitTypeSnippet;
-import responses.MyCardSnippet;
-import responses.RaritySnippet;
-import responses.TypeSnippet;
+import requests.SourceCardMapFilterRequest;
+import responses.*;
 import services.CardsService;
 import com.google.inject.Inject;
 
@@ -45,15 +34,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-import dao.CardsDao;
 import services.ElasticService;
 import utils.Utils;
 
 public class CardsServiceImpl implements CardsService
 {
     private final CardsDao cardsDao;
+    private final CardSourceMapDao cardSourceMapDao;
     private final CardSubTypeMapDao cardSubTypeMapDao;
     private final MyCardsDao myCardsDao;
+    private final SourceDao sourceDao;
 
     private final ElasticService elasticService;
 
@@ -61,15 +51,19 @@ public class CardsServiceImpl implements CardsService
     public CardsServiceImpl
     (
         CardsDao cardsDao,
+        CardSourceMapDao cardSourceMapDao,
         CardSubTypeMapDao cardSubTypeMapDao,
         MyCardsDao myCardsDao,
+        SourceDao sourceDao,
 
         ElasticService elasticService
     )
     {
         this.cardsDao = cardsDao;
+        this.cardSourceMapDao = cardSourceMapDao;
         this.cardSubTypeMapDao = cardSubTypeMapDao;
         this.myCardsDao = myCardsDao;
+        this.sourceDao = sourceDao;
 
         this.elasticService = elasticService;
     }
@@ -219,6 +213,21 @@ public class CardsServiceImpl implements CardsService
             cardSnippet.setLastObtainedDate(myCards.get(0).getObtainedDate());
         }
 
+        SourceCardMapFilterRequest sourceCardMapFilterRequest = new SourceCardMapFilterRequest();
+        sourceCardMapFilterRequest.setCardId(cardSnippet.getId());
+        List<SourceCardMap> sourceCardMaps = this.cardSourceMapDao.get(sourceCardMapFilterRequest);
+        List<SourceSnippet> sourceSnippets = new ArrayList<>();
+
+        for(SourceCardMap sourceCardMap: sourceCardMaps)
+        {
+            Source source = this.sourceDao.getById(sourceCardMap.getId());
+            if(null != source)
+            {
+                sourceSnippets.add(new SourceSnippet(source));
+            }
+        }
+
+        cardSnippet.setSources(sourceSnippets);
         return cardSnippet;
     }
 
