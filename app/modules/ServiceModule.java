@@ -2,15 +2,9 @@ package modules;
 
 import com.google.inject.AbstractModule;
 
-import services.ElasticService;
-import services.IndexService;
-import services.CardsService;
+import services.*;
 
-import services.MyCardsService;
-import services.impl.ElasticServiceImpl;
-import services.impl.IndexServiceImpl;
-import services.impl.CardsServiceImpl;
-import services.impl.MyCardsServiceImpl;
+import services.impl.*;
 
 
 public class ServiceModule extends AbstractModule
@@ -22,5 +16,6 @@ public class ServiceModule extends AbstractModule
         bind(CardsService.class).to(CardsServiceImpl.class).asEagerSingleton();
         bind(ElasticService.class).to(ElasticServiceImpl.class).asEagerSingleton();
         bind(MyCardsService.class).to(MyCardsServiceImpl.class).asEagerSingleton();
+        bind(SourceService.class).to(SourceServiceImpl.class).asEagerSingleton();
     }
 }

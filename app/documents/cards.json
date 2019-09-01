@@ -172,6 +172,34 @@
           },
           "obtainedDate": {
             "type": "date"
+          },
+          "source": {
+            "type": "nested",
+            "properties": {
+              "id": {
+                "type": "long"
+              },
+              "name": {
+                "type": "keyword"
+              },
+              "type": {
+                "type": "nested",
+                "properties": {
+                  "id": {
+                    "type": "interger"
+                  },
+                  "name": {
+                    "type": "keyword"
+                  }
+                },
+                "expiry": {
+                  "type": "date"
+                },
+                "createdDate": {
+                  "type": "date"
+                }
+              }
+            }
           }
         }
       }
