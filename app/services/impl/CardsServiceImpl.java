@@ -206,12 +206,18 @@ public class CardsServiceImpl implements CardsService
         cardSnippet.setId(card.getId());
         cardSnippet.setName(card.getName());
         cardSnippet.setDescription(card.getDescription());
-        cardSnippet.setLevel(card.getLevel());
-        cardSnippet.setAttribute(new AttributeSnippet(card.getAttribute()));
-        cardSnippet.setType(new TypeSnippet(card.getType()));
-        cardSnippet.setAttack(card.getAttack());
-        cardSnippet.setDefense(card.getDefense());
-        cardSnippet.setCardType(new CardTypeSnippet(card.getCardType()));
+        CardType cardType = card.getCardType();
+        cardSnippet.setCardType(new CardTypeSnippet(cardType));
+
+        if(CardType.MONSTER.equals(cardType))
+        {
+            cardSnippet.setLevel(card.getLevel());
+            cardSnippet.setAttribute(new AttributeSnippet(card.getAttribute()));
+            cardSnippet.setType(new TypeSnippet(card.getType()));
+            cardSnippet.setAttack(card.getAttack());
+            cardSnippet.setDefense(card.getDefense());
+        }
+
         cardSnippet.setRarity(new RaritySnippet(card.getRarity()));
         cardSnippet.setLimitType(new LimitTypeSnippet(card.getLimitType()));
         cardSnippet.setImageUrl(card.getImageUrl());

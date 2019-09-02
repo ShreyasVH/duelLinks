@@ -36,7 +36,10 @@ public enum CardSubType
     SPIRIT(8),
 
     @EnumValue("9")
-    TUNER(9);
+    TUNER(9),
+
+    @EnumValue("10")
+    FLIP(10);
 
     private int value;
 }
