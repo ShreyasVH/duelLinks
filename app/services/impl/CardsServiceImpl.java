@@ -23,7 +23,17 @@ import requests.CardRequest;
 import requests.CardSubTypeMapFilterRequest;
 import requests.CardsFilterRequest;
 import requests.SourceCardMapFilterRequest;
-import responses.*;
+import responses.AttributeSnippet;
+import responses.CardFilterResponse;
+import responses.CardSnippet;
+import responses.CardSubTypeSnippet;
+import responses.CardTypeSnippet;
+import responses.ElasticResponse;
+import responses.LimitTypeSnippet;
+import responses.MyCardSnippet;
+import responses.RaritySnippet;
+import responses.SourceSnippet;
+import responses.TypeSnippet;
 import services.CardsService;
 import com.google.inject.Inject;
 
@@ -97,6 +107,34 @@ public class CardsServiceImpl implements CardsService
         response.setCards(elasticResponse.getDocuments());
         response.setOffset(Long.parseLong(String.valueOf(filterRequest.getOffset() + Math.min(filterRequest.getCount(), elasticResponse.getDocuments().size()))));
         return response;
+    }
+
+    public Boolean indexCardsForSource(Long sourceId)
+    {
+        Boolean isCompleteSuccess = true;
+        SourceCardMapFilterRequest request = new SourceCardMapFilterRequest();
+        request.setId(sourceId);
+
+        List<SourceCardMap> cardMaps = this.cardSourceMapDao.get(request);
+        for(SourceCardMap cardMap: cardMaps)
+        {
+            Boolean isSuccess = this.index(cardMap.getCardId());
+            isCompleteSuccess = (isCompleteSuccess && isSuccess);
+        }
+        return isCompleteSuccess;
+    }
+
+    public Boolean indexCards(List<SourceCardMap> cardMaps)
+    {
+        Boolean isCompleteSuccess = true;
+
+        for(SourceCardMap cardMap: cardMaps)
+        {
+            Boolean isSuccess = this.index(cardMap.getCardId());
+            isCompleteSuccess = (isCompleteSuccess && isSuccess);
+        }
+
+        return isCompleteSuccess;
     }
 
     private Boolean index(Long id, CardSnippet cardSnippet)
@@ -220,7 +258,7 @@ public class CardsServiceImpl implements CardsService
 
         for(SourceCardMap sourceCardMap: sourceCardMaps)
         {
-            Source source = this.sourceDao.getById(sourceCardMap.getId());
+            Source source = this.sourceDao.getById(sourceCardMap.getSourceId());
             if(null != source)
             {
                 sourceSnippets.add(new SourceSnippet(source));

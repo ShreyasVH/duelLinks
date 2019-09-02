@@ -1,5 +1,6 @@
 package services;
 
+import models.SourceCardMap;
 import play.libs.concurrent.HttpExecutionContext;
 import requests.CardRequest;
 import requests.CardsFilterRequest;
@@ -19,6 +20,10 @@ public interface CardsService
     CardSnippet get(Long id);
 
     CardFilterResponse getWithFilters(CardsFilterRequest filterRequest);
+
+    Boolean indexCardsForSource(Long sourceId);
+
+    Boolean indexCards(List<SourceCardMap> cardMaps);
 
     Boolean index(Long id);
 

@@ -118,59 +118,59 @@ public class SourceServiceImpl implements SourceService
             if(isSourceSaveRequired)
             {
                 existingSource = this.sourceDao.save(existingSource);
+            }
 
-                SourceCardMapFilterRequest cardMapFilterRequest = new SourceCardMapFilterRequest();
-                cardMapFilterRequest.setId(existingSource.getId());
+            SourceCardMapFilterRequest cardMapFilterRequest = new SourceCardMapFilterRequest();
+            cardMapFilterRequest.setId(existingSource.getId());
 
-                List<SourceCardMap> existingCards = this.cardSourceMapDao.get(cardMapFilterRequest);
-                sourceResponse = new SourceResponse(existingSource, existingCards);
+            List<SourceCardMap> existingCards = this.cardSourceMapDao.get(cardMapFilterRequest);
+            sourceResponse = new SourceResponse(existingSource, existingCards);
 
-                if(null != request.getCards())
+            if(null != request.getCards())
+            {
+                List<Long> existingCardIds = new ArrayList<>();
+                List<SourceCardMap> updatedCards = new ArrayList<>();
+                List<SourceCardMap> cardsToRemove = new ArrayList<>();
+                List<SourceCardMap> cardsToAdd = new ArrayList<>();
+                for(SourceCardMap existingCard: existingCards)
                 {
-                    List<Long> existingCardIds = new ArrayList<>();
-                    List<SourceCardMap> updatedCards = new ArrayList<>();
-                    List<SourceCardMap> cardsToRemove = new ArrayList<>();
-                    List<SourceCardMap> cardsToAdd = new ArrayList<>();
-                    for(SourceCardMap existingCard: existingCards)
+                    Long cardId = existingCard.getCardId();
+                    existingCardIds.add(cardId);
+
+                    if(request.getCards().contains(cardId))
                     {
-                        Long cardId = existingCard.getCardId();
-                        existingCardIds.add(cardId);
-
-                        if(request.getCards().contains(cardId))
-                        {
-                            updatedCards.add(existingCard);
-                        }
-                        else
-                        {
-                            cardsToRemove.add(existingCard);
-                        }
+                        updatedCards.add(existingCard);
                     }
-
-                    for(Long cardId: request.getCards())
+                    else
                     {
-                        if(!existingCardIds.contains(cardId))
-                        {
-                            SourceCardMap cardMap = new SourceCardMap();
-                            cardMap.setCardId(cardId);
-                            cardMap.setSourceId(existingSource.getId());
-
-                            cardsToAdd.add(cardMap);
-                            updatedCards.add(cardMap);
-                        }
+                        cardsToRemove.add(existingCard);
                     }
-
-                    if(!cardsToAdd.isEmpty())
-                    {
-                        this.cardSourceMapDao.save(cardsToAdd);
-                    }
-
-                    if(!cardsToRemove.isEmpty())
-                    {
-                        this.cardSourceMapDao.delete(cardsToRemove);
-                    }
-
-                    sourceResponse.setCards(updatedCards);
                 }
+
+                for(Long cardId: request.getCards())
+                {
+                    if(!existingCardIds.contains(cardId))
+                    {
+                        SourceCardMap cardMap = new SourceCardMap();
+                        cardMap.setCardId(cardId);
+                        cardMap.setSourceId(existingSource.getId());
+
+                        cardsToAdd.add(cardMap);
+                        updatedCards.add(cardMap);
+                    }
+                }
+
+                if(!cardsToAdd.isEmpty())
+                {
+                    this.cardSourceMapDao.save(cardsToAdd);
+                }
+
+                if(!cardsToRemove.isEmpty())
+                {
+                    this.cardSourceMapDao.delete(cardsToRemove);
+                }
+
+                sourceResponse.setCards(updatedCards);
             }
         }
 
@@ -210,6 +210,11 @@ public class SourceServiceImpl implements SourceService
 
                 existingSource = this.sourceDao.save(existingSource);
                 isSuccess = (newQuantity.equals(existingSource.getQuantity()));
+
+                if(isSuccess)
+                {
+
+                }
             }
             else
             {
