@@ -39,7 +39,22 @@ public enum CardSubType
     TUNER(9),
 
     @EnumValue("10")
-    FLIP(10);
+    FLIP(10),
+
+    @EnumValue("11")
+    FIELD(11),
+
+    @EnumValue("12")
+    EQUIP(12),
+
+    @EnumValue("13")
+    CONTINUOUS(13),
+
+    @EnumValue("14")
+    QUICK_PLAY(14),
+
+    @EnumValue("15")
+    COUNTER(15);
 
     private int value;
 }
