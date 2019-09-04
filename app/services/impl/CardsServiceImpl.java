@@ -18,6 +18,8 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.sort.SortBuilder;
+import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
 import requests.CardRequest;
 import requests.CardSubTypeMapFilterRequest;
@@ -37,6 +39,7 @@ import responses.TypeSnippet;
 import services.CardsService;
 import com.google.inject.Inject;
 
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -622,5 +625,31 @@ public class CardsServiceImpl implements CardsService
         }
 
         return limitTypes;
+    }
+
+    @Override
+    public List<CardSnippet> getByKeyword(String keywordString)
+    {
+        SearchRequest request = new SearchRequest("cards");
+        SearchSourceBuilder builder = new SearchSourceBuilder();
+        keywordString = URLDecoder.decode(keywordString);
+        String[] words = keywordString.split(" ");
+        BoolQueryBuilder finalQuery = QueryBuilders.boolQuery();
+        for(String word : words)
+        {
+            word = word.toLowerCase();
+            if(word.length() >= 2)
+            {
+                finalQuery.must(QueryBuilders.termQuery(CardElasticAttribute.NAME.getName(), word));
+            }
+        }
+        builder.query(finalQuery);
+
+        builder.sort("name.sort", SortOrder.ASC);
+        builder.sort("id", SortOrder.ASC);
+
+        request.source(builder);
+        ElasticResponse<CardSnippet> elasticResponse = this.elasticService.search(request, CardSnippet.class);
+        return elasticResponse.getDocuments();
     }
 }

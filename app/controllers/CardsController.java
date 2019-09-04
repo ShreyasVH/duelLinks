@@ -68,6 +68,11 @@ public class CardsController extends BaseController
         }, httpExecutionContext.current()).thenApplyAsync(response -> ok(Json.toJson(response)));
     }
 
+    public CompletionStage<Result> getByKeyword(String keywordString)
+    {
+        return CompletableFuture.supplyAsync(() -> this.cardsService.getByKeyword(keywordString), this.httpExecutionContext.current()).thenApplyAsync(cards -> ok(Json.toJson(cards)), this.httpExecutionContext.current());
+    }
+
     public CompletionStage<Result> index(Long id)
     {
         return CompletableFuture.supplyAsync(() -> ok(Json.toJson(cardsService.index(id))), httpExecutionContext.current());

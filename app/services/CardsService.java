@@ -42,4 +42,6 @@ public interface CardsService
     List<RaritySnippet> getRarities();
 
     List<LimitTypeSnippet> getLimitTypes();
+
+    List<CardSnippet> getByKeyword(String keywordString);
 }

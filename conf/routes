@@ -13,6 +13,7 @@ GET     /cards/rarities                                     controllers.CardsCon
 GET     /cards/limitTypes                                   controllers.CardsController.getLimitTypes()
 
 GET     /cards/:id                                          controllers.CardsController.get(id: Long)
+GET     /cards/keyword/:keywordString                       controllers.CardsController.getByKeyword(keywordString: String)
 POST    /cards/filters                                      controllers.CardsController.getWithFilters()
 GET     /cards/index/:id                                    controllers.CardsController.index(id: Long)
 POST    /cards                                              controllers.CardsController.create()

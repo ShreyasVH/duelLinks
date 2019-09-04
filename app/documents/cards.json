@@ -36,7 +36,13 @@
         "type": "long"
       },
       "name": {
-        "type": "keyword"
+        "type": "text",
+        "analyzer": "my_analyzer",
+        "fields": {
+          "sort": {
+            "type": "keyword"
+          }
+        }
       },
       "description": {
         "type": "keyword"
