@@ -31,7 +31,7 @@ public class Source extends BaseModel
     private SourceType type;
 
     @Column(name = "quantity")
-    private Integer quantity;
+    private Integer quantity = 1;
 
     @Column(name = "expiry")
     private Date expiry;

@@ -15,7 +15,7 @@ public class SourceRequest
     private Long id;
     private String name;
     private SourceType type;
-    private Integer quantity;
+    private Integer quantity = 1;
     private List<Long> cards;
     private String expiry;
 }
