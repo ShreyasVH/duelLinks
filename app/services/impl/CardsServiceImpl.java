@@ -353,13 +353,14 @@ public class CardsServiceImpl implements CardsService
             CardElasticAttribute cardElasticAttribute = CardElasticAttribute.fromString(key);
             if(null != cardElasticAttribute)
             {
-                builder.sort(key, order);
+                String sortKey = ((cardElasticAttribute.getName().equals("name")) ? (key + ".sort") : key);
+                builder.sort(sortKey, order);
             }
         }
 
         if(!sortMap.containsKey("name"))
         {
-            builder.sort("name", SortOrder.ASC);
+            builder.sort("name.sort", SortOrder.ASC);
         }
 
         request.source(builder);
