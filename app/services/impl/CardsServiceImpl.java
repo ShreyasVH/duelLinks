@@ -1,17 +1,27 @@
 package services.impl;
 
-import dao.*;
+import dao.CardSourceMapDao;
+import dao.CardSubTypeMapDao;
+import dao.CardsDao;
+import dao.MyCardsDao;
+import dao.SourceDao;
 import enums.Attribute;
 import enums.CardElasticAttribute;
 import enums.CardGlossType;
 import enums.CardSubType;
 import enums.CardType;
 import enums.ElasticIndex;
+import enums.ErrorCode;
 import enums.FieldType;
 import enums.LimitType;
 import enums.Rarity;
 import enums.Type;
-import models.*;
+import exceptions.NotFoundException;
+import models.Card;
+import models.CardSubTypeMap;
+import models.MyCard;
+import models.Source;
+import models.SourceCardMap;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.index.query.BoolQueryBuilder;
@@ -91,10 +101,15 @@ public class CardsServiceImpl implements CardsService
         request.setFilters(filters);
 
         CardFilterResponse cardResponse = getWithFilters(request);
-        if(!cardResponse.getCards().isEmpty())
+        if(cardResponse.getCards().isEmpty())
+        {
+            throw new NotFoundException(ErrorCode.CARD_NOT_FOUND.getCode(), ErrorCode.CARD_NOT_FOUND.getDescription());
+        }
+        else
         {
             cardSnippet = cardResponse.getCards().get(0);
         }
+
 
         return cardSnippet;
     }

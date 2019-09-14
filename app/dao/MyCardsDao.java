@@ -2,7 +2,9 @@ package dao;
 
 import com.google.inject.Inject;
 import customContexts.DatabaseExecutionContext;
+import enums.ErrorCode;
 import enums.Status;
+import exceptions.DBInteractionException;
 import io.ebean.Ebean;
 import io.ebean.EbeanServer;
 import models.MyCard;
@@ -40,7 +42,7 @@ public class MyCardsDao
         }
         catch(Exception ex)
         {
-            String sh = "sh";
+            throw new DBInteractionException(ErrorCode.DB_INTERACTION_FAILED.getCode(), ex.getMessage());
         }
         return myCard;
     }
