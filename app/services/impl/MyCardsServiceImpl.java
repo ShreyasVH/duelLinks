@@ -51,6 +51,7 @@ public class MyCardsServiceImpl implements MyCardsService
         MyCard myCard = new MyCard();
         myCard.setCardId(myCardRequest.getCardId());
         myCard.setCardGlossType(myCardRequest.getGlossType());
+        myCard.setStatus(myCardRequest.getStatus());
         myCard.setObtainedDate(Utils.getCurrentDate());
 
         return this.myCardsDao.save(myCard);
