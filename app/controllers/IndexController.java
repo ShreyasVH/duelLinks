@@ -35,8 +35,7 @@ public class IndexController extends BaseController
     public CompletionStage<Result> index()
     {
         return CompletableFuture.supplyAsync(() -> {
-            return Json.toJson(this.config.getObject("play.modules.enabled")).toString();
-//            return indexService.index();
+            return indexService.index();
         }, httpExecutionContext.current()).thenApplyAsync(response -> {
             return ok(Json.toJson(response));
         }, httpExecutionContext.current());
