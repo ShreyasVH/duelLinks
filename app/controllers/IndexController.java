@@ -22,7 +22,7 @@ public class IndexController extends BaseController
     (
         IndexService indexService,
         HttpExecutionContext httpExecutionContext,
-        Config config;
+        Config config
     )
     {
         this.indexService = indexService;
