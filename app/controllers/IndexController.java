@@ -1,6 +1,7 @@
 package controllers;
 
 import com.google.inject.Inject;
+import com.typesafe.config.Config;
 import play.libs.concurrent.HttpExecutionContext;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.CompletableFuture;
@@ -14,24 +15,28 @@ public class IndexController extends BaseController
 {
     private final IndexService indexService;
     private final HttpExecutionContext httpExecutionContext;
-
+    private final Config config;
 
     @Inject
     public IndexController
     (
         IndexService indexService,
-        HttpExecutionContext httpExecutionContext
+        HttpExecutionContext httpExecutionContext,
+        Config config;
     )
     {
         this.indexService = indexService;
 
         this.httpExecutionContext = httpExecutionContext;
+
+        this.config = config;
     }
 
     public CompletionStage<Result> index()
     {
         return CompletableFuture.supplyAsync(() -> {
-            return indexService.index();
+            return this.config.getString("play.db.prototype.hikaricp.maximumPoolSize");
+//            return indexService.index();
         }, httpExecutionContext.current()).thenApplyAsync(response -> {
             return ok(Json.toJson(response));
         }, httpExecutionContext.current());
