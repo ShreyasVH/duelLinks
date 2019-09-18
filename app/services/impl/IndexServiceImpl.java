@@ -21,6 +21,7 @@ public class IndexServiceImpl implements IndexService
     @Override
     public String index()
     {
-        return indexDao.index();
+//        return indexDao.index();
+        return System.getenv("play.db.prototype.hikaricp.maximumPoolSize");
     }
 }
