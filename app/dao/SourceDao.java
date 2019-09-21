@@ -46,16 +46,11 @@ public class SourceDao
 
     public RawSql filter(SourceFilterRequest request)
     {
-        String query = "SELECT id, name, type, quantity, expiry, created_at FROM sources WHERE";
+        String query = "SELECT id, name, type, quantity, expiry, created_at FROM sources WHERE 1";
 
         if(null != request.getId())
         {
-            query += " 1";
             query += " AND id = " + request.getId();
-        }
-        else
-        {
-            query += " expiry IS NULL";
         }
 
         if(request.getIncludeQuantityCheck())
@@ -65,7 +60,11 @@ public class SourceDao
 
         if(request.getIncludeExpiryCheck())
         {
-            query += " AND expiry > '" + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(new Date()) +"'";
+            query += " AND (expiry > '" + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(new Date()) +"' OR expiry IS NULL)";
+        }
+        else
+        {
+            query += " AND (1 OR expiry is NULL)";
         }
 
         query += " ORDER BY expiry ASC, id DESC";
