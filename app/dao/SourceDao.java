@@ -3,7 +3,8 @@ package dao;
 import com.google.inject.Inject;
 import io.ebean.Ebean;
 import io.ebean.EbeanServer;
-import io.ebean.ExpressionList;
+import io.ebean.RawSql;
+import io.ebean.RawSqlBuilder;
 import models.Source;
 import play.db.ebean.EbeanConfig;
 import play.db.ebean.EbeanDynamicEvolutions;
@@ -43,28 +44,33 @@ public class SourceDao
         return source;
     }
 
-    public ExpressionList<Source> filter(SourceFilterRequest request)
+    public RawSql filter(SourceFilterRequest request)
     {
-        ExpressionList<Source> expressionList = this.db.find(Source.class).where();
+        String query = "SELECT id, name, type, quantity, expiry, created_at FROM sources WHERE";
 
         if(null != request.getId())
         {
-            expressionList.eq("id", request.getId());
+            query += " 1";
+            query += " AND id = " + request.getId();
+        }
+        else
+        {
+            query += " expiry IS NULL";
         }
 
         if(request.getIncludeQuantityCheck())
         {
-            expressionList.ne("quantity", 0);
+            query += " AND quantity > 0";
         }
 
         if(request.getIncludeExpiryCheck())
         {
-            expressionList.ge("expiry", (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(new Date()));
+            query += " AND expiry > '" + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(new Date()) +"'";
         }
 
-        expressionList.order("expiry ASC, id ASC");
+        query += " ORDER BY expiry ASC, id DESC";
 
-        return expressionList;
+        return RawSqlBuilder.parse(query).create();
     }
 
     public Source getById(Long id)
@@ -93,9 +99,8 @@ public class SourceDao
 
         try
         {
-            ExpressionList<Source> expressionList = this.filter(request);
-            sources = expressionList.findList();
-            String sh = "sh";
+            RawSql sql = this.filter(request);
+            sources = this.db.find(Source.class).setRawSql(sql).findList();
         }
         catch(Exception ex)
         {

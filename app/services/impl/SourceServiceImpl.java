@@ -40,7 +40,7 @@ public class SourceServiceImpl implements SourceService
         source.setName(request.getName());
         source.setQuantity(request.getQuantity());
         source.setType(request.getType());
-        source.setCreatedDate(new Date());
+        source.setCreatedAt(new Date());
 
         Date expiry = null;
         if(null != request.getExpiry())

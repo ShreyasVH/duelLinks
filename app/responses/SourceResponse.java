@@ -30,7 +30,7 @@ public class SourceResponse
         this.type = source.getType();
         this.quantity = source.getQuantity();
         this.expiry = source.getExpiry();
-        this.createdDate = source.getCreatedDate();
+        this.createdDate = source.getCreatedAt();
         this.cards = sourceCardMaps;
     }
 }

@@ -37,5 +37,5 @@ public class Source extends BaseModel
     private Date expiry;
 
     @Column(name = "created_at")
-    private Date createdDate;
+    private Date createdAt;
 }

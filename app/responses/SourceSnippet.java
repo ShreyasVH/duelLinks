@@ -24,6 +24,6 @@ public class SourceSnippet
         this.name = source.getName();
         this.sourceTypeSnippet = new SourceTypeSnippet(source.getType());
         this.expiry = source.getExpiry();
-        this.createdDate = source.getCreatedDate();
+        this.createdDate = source.getCreatedAt();
     }
 }
