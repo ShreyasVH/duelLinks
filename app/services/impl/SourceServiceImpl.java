@@ -5,31 +5,50 @@ import dao.CardSourceMapDao;
 import dao.SourceDao;
 import models.SourceCardMap;
 import models.Source;
+import requests.CardsFilterRequest;
 import requests.SourceCardMapFilterRequest;
 import requests.SourceFilterRequest;
 import requests.SourceRequest;
+import responses.CardFilterResponse;
 import responses.SourceResponse;
+import services.CardsService;
 import services.SourceService;
+import utils.ThreadUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SourceServiceImpl implements SourceService
 {
     private final CardSourceMapDao cardSourceMapDao;
     private final SourceDao sourceDao;
 
+    private final CardsService cardsService;
+
+    private final ThreadUtils threadUtils;
+
     @Inject
     public SourceServiceImpl
     (
         CardSourceMapDao cardSourceMapDao,
-        SourceDao sourceDao
+        SourceDao sourceDao,
+
+        CardsService cardsService,
+
+        ThreadUtils threadUtils
     )
     {
         this.cardSourceMapDao = cardSourceMapDao;
         this.sourceDao = sourceDao;
+
+        this.cardsService = cardsService;
+
+        this.threadUtils = threadUtils;
     }
 
     @Override
@@ -168,6 +187,8 @@ public class SourceServiceImpl implements SourceService
                 if(!cardsToRemove.isEmpty())
                 {
                     this.cardSourceMapDao.delete(cardsToRemove);
+
+                    this.threadUtils.schedule(() -> cardsService.indexCards(cardsToRemove));
                 }
 
                 sourceResponse.setCards(updatedCards);
@@ -236,8 +257,14 @@ public class SourceServiceImpl implements SourceService
             SourceCardMapFilterRequest request = new SourceCardMapFilterRequest();
             request.setId(sourceId);
 
-            List<SourceCardMap> cardMaps = this.cardSourceMapDao.get(request);
-            sourceResponse = new SourceResponse(existingSource, cardMaps);
+            CardsFilterRequest filterRequest = new CardsFilterRequest();
+            Map<String, List<String>> filters = new HashMap<>();
+            filters.put("sources", Collections.singletonList(sourceId.toString()));
+            filterRequest.setFilters(filters);
+
+            CardFilterResponse cardFilterResponse = this.cardsService.getWithFilters(filterRequest);
+
+            sourceResponse = new SourceResponse(existingSource, cardFilterResponse.getCards());
         }
 
         return sourceResponse;

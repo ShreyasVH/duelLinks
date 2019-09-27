@@ -21,9 +21,9 @@ public class SourceResponse
     private Integer quantity;
     private Date expiry;
     private Date createdDate;
-    private List<SourceCardMap> cards;
+    private List cards;
 
-    public SourceResponse(Source source, List<SourceCardMap> sourceCardMaps)
+    public SourceResponse(Source source, List cards)
     {
         this.id = source.getId();
         this.name = source.getName();
@@ -31,6 +31,6 @@ public class SourceResponse
         this.quantity = source.getQuantity();
         this.expiry = source.getExpiry();
         this.createdDate = source.getCreatedAt();
-        this.cards = sourceCardMaps;
+        this.cards = cards;
     }
 }

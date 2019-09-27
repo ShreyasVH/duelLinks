@@ -178,34 +178,34 @@
           },
           "obtainedDate": {
             "type": "date"
+          }
+        }
+      },
+      "sources": {
+        "type": "nested",
+        "properties": {
+          "id": {
+            "type": "long"
           },
-          "sources": {
+          "name": {
+            "type": "keyword"
+          },
+          "type": {
             "type": "nested",
             "properties": {
               "id": {
-                "type": "long"
+                "type": "integer"
               },
               "name": {
                 "type": "keyword"
-              },
-              "type": {
-                "type": "nested",
-                "properties": {
-                  "id": {
-                    "type": "integer"
-                  },
-                  "name": {
-                    "type": "keyword"
-                  }
-                }
-              },
-              "expiry": {
-                "type": "date"
-              },
-              "createdDate": {
-                "type": "date"
               }
             }
+          },
+          "expiry": {
+            "type": "date"
+          },
+          "createdDate": {
+            "type": "date"
           }
         }
       }
