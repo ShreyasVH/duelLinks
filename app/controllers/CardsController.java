@@ -1,6 +1,8 @@
 package controllers;
 
 import com.google.inject.Inject;
+import enums.ErrorCode;
+import exceptions.BadRequestException;
 import play.mvc.Http;
 import play.mvc.Result;
 
@@ -15,8 +17,9 @@ import play.libs.Json;
 
 import requests.CardRequest;
 import requests.CardsFilterRequest;
-import responses.CardSnippet;
+import requests.VersionRequest;
 import services.CardsService;
+import utils.ThreadUtils;
 import utils.Utils;
 
 public class CardsController extends BaseController
@@ -25,17 +28,23 @@ public class CardsController extends BaseController
 
     private final HttpExecutionContext httpExecutionContext;
 
+    private final ThreadUtils threadUtils;
+
     @Inject
     public CardsController
     (
         CardsService cardsService,
 
-        HttpExecutionContext httpExecutionContext
+        HttpExecutionContext httpExecutionContext,
+
+        ThreadUtils threadUtils
     )
     {
         this.cardsService = cardsService;
 
         this.httpExecutionContext = httpExecutionContext;
+
+        this.threadUtils = threadUtils;
     }
 
     public CompletionStage<Result> get(Long id)
@@ -161,6 +170,29 @@ public class CardsController extends BaseController
             Map<String, List> responseMap = new HashMap<>();
             responseMap.put("limitTypes", limitTypes);
             return ok(Json.toJson(responseMap));
+        }, httpExecutionContext.current());
+    }
+
+    public CompletionStage<Result> version(Http.Request request)
+    {
+        return CompletableFuture.supplyAsync(() -> {
+            VersionRequest versionRequest = null;
+            try
+            {
+                versionRequest = Utils.convertObject(request.body().asJson(), VersionRequest.class);
+            }
+            catch(Exception ex)
+            {
+                throw new BadRequestException(ErrorCode.INVALID_REQUEST.getCode(), ErrorCode.INVALID_REQUEST.getDescription());
+            }
+
+            return this.cardsService.version(versionRequest);
+        }, httpExecutionContext.current()).thenApplyAsync(cardSnippet -> {
+            if ((null != cardSnippet) && (null != cardSnippet.getId()))
+            {
+                this.threadUtils.schedule(() -> cardsService.index(cardSnippet.getId(), cardSnippet));
+            }
+            return ok(Json.toJson(cardSnippet));
         }, httpExecutionContext.current());
     }
 }

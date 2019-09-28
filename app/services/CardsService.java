@@ -1,9 +1,9 @@
 package services;
 
 import models.SourceCardMap;
-import play.libs.concurrent.HttpExecutionContext;
 import requests.CardRequest;
 import requests.CardsFilterRequest;
+import requests.VersionRequest;
 import responses.AttributeSnippet;
 import responses.CardFilterResponse;
 import responses.CardSnippet;
@@ -25,6 +25,8 @@ public interface CardsService
 
     Boolean indexCards(List<SourceCardMap> cardMaps);
 
+    Boolean index(Long id, CardSnippet cardSnippet);
+
     Boolean index(Long id);
 
     CardSnippet create(CardRequest request);
@@ -44,4 +46,6 @@ public interface CardsService
     List<LimitTypeSnippet> getLimitTypes();
 
     List<CardSnippet> getByKeyword(String keywordString);
+
+    CardSnippet version(VersionRequest request);
 }

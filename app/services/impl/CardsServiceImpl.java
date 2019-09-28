@@ -28,13 +28,12 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
-import org.elasticsearch.search.sort.SortBuilder;
-import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
 import requests.CardRequest;
 import requests.CardSubTypeMapFilterRequest;
 import requests.CardsFilterRequest;
 import requests.SourceCardMapFilterRequest;
+import requests.VersionRequest;
 import responses.AttributeSnippet;
 import responses.CardFilterResponse;
 import responses.CardSnippet;
@@ -155,7 +154,8 @@ public class CardsServiceImpl implements CardsService
         return isCompleteSuccess;
     }
 
-    private Boolean index(Long id, CardSnippet cardSnippet)
+    @Override
+    public Boolean index(Long id, CardSnippet cardSnippet)
     {
         boolean isSuccess = false;
         if(null != cardSnippet.getId())
@@ -239,12 +239,12 @@ public class CardsServiceImpl implements CardsService
         cardSnippet.setRarity(new RaritySnippet(card.getRarity()));
         cardSnippet.setLimitType(new LimitTypeSnippet(card.getLimitType()));
         cardSnippet.setImageUrl(card.getImageUrl());
-
-        CardSubTypeMapFilterRequest cardSubTypeMapFilterRequest = new CardSubTypeMapFilterRequest();
-        cardSubTypeMapFilterRequest.setCardIds(Collections.singletonList(card.getId()));
+        cardSnippet.setVersion(card.getVersion());
 
         if(null == cardSubTypeMaps)
         {
+            CardSubTypeMapFilterRequest cardSubTypeMapFilterRequest = new CardSubTypeMapFilterRequest();
+            cardSubTypeMapFilterRequest.setCardIds(Collections.singletonList(card.getId()));
             cardSubTypeMaps = this.cardSubTypeMapDao.list(cardSubTypeMapFilterRequest);
         }
 
@@ -376,6 +376,11 @@ public class CardsServiceImpl implements CardsService
         if(!sortMap.containsKey("name"))
         {
             builder.sort("name.sort", SortOrder.ASC);
+        }
+
+        if(!sortMap.containsKey("version"))
+        {
+            builder.sort("version", SortOrder.ASC);
         }
 
         request.source(builder);
@@ -667,5 +672,49 @@ public class CardsServiceImpl implements CardsService
         request.source(builder);
         ElasticResponse<CardSnippet> elasticResponse = this.elasticService.search(request, CardSnippet.class);
         return elasticResponse.getDocuments();
+    }
+
+    @Override
+    public CardSnippet version(VersionRequest request)
+    {
+        CardSnippet cardSnippet = null;
+        Card card = null;
+        String name = request.getName();
+        String imageUrl = request.getImageUrl();
+
+        Card previousCard = this.cardsDao.getLatest(name);
+
+        if(null != previousCard)
+        {
+            Integer previousVersion = previousCard.getVersion();
+
+            card = new Card(previousCard);
+            card.setVersion(previousVersion + 1);
+            card.setImageUrl(imageUrl);
+            card.setId(null);
+
+            this.cardsDao.save(card);
+
+            if(null != card.getId())
+            {
+                CardSubTypeMapFilterRequest cardSubTypeMapFilterRequest = new CardSubTypeMapFilterRequest();
+                cardSubTypeMapFilterRequest.setCardIds(Collections.singletonList(previousCard.getId()));
+                List<CardSubTypeMap> cardSubTypeMaps = this.cardSubTypeMapDao.list(cardSubTypeMapFilterRequest);
+
+                List<CardSubTypeMap> cardSubTypeMapsForNewVersion = new ArrayList<>();
+                for(CardSubTypeMap cardSubTypeMap: cardSubTypeMaps)
+                {
+                    CardSubTypeMap cardSubTypeMapForNewVersion = new CardSubTypeMap();
+                    cardSubTypeMapForNewVersion.setCardId(card.getId());
+                    cardSubTypeMapForNewVersion.setCardSubType(cardSubTypeMap.getCardSubType());
+
+                    cardSubTypeMapsForNewVersion.add(cardSubTypeMapForNewVersion);
+                }
+                this.cardSubTypeMapDao.create(cardSubTypeMapsForNewVersion);
+
+                cardSnippet = this.cardSnippet(card, cardSubTypeMapsForNewVersion, new ArrayList<>());
+            }
+        }
+        return cardSnippet;
     }
 }
