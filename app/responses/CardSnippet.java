@@ -52,4 +52,6 @@ public class CardSnippet
     private List<MyCardSnippet> individualCards;
 
     private List<SourceSnippet> sources;
+
+    private Integer version;
 }

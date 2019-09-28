@@ -5,8 +5,8 @@ import customContexts.DatabaseExecutionContext;
 import io.ebean.EbeanServer;
 import io.ebean.Ebean;
 import io.ebean.Query;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
+
+import java.util.List;
 
 import models.Card;
 import play.db.ebean.EbeanConfig;
@@ -58,6 +58,26 @@ public class CardsDao
         {
             String sh = "sh";
         }
+        return card;
+    }
+
+    public Card getLatest(String name)
+    {
+        Card card = null;
+
+        try
+        {
+            List<Card> cards = this.db.find(Card.class).where().eq("name", name).setMaxRows(1).orderBy("version DESC").findList();
+            if(!cards.isEmpty())
+            {
+                card = cards.get(0);
+            }
+        }
+        catch(Exception ex)
+        {
+            String sh = "sh";
+        }
+
         return card;
     }
 }

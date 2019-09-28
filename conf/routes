@@ -17,6 +17,7 @@ GET     /cards/keyword/:keywordString                       controllers.CardsCon
 POST    /cards/filters                                      controllers.CardsController.getWithFilters()
 GET     /cards/index/:id                                    controllers.CardsController.index(id: Long)
 POST    /cards                                              controllers.CardsController.create()
+POST    /cards/version                                      controllers.CardsController.version(request: Request)
 PUT     /cards                                              controllers.CardsController.update(request: Request)
 
 POST    /cards/myCards                                      controllers.MyCardsController.create(request: Request)

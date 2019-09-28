@@ -2,6 +2,7 @@ package models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import javax.persistence.Table;
 import javax.persistence.Entity;
@@ -11,7 +12,6 @@ import javax.persistence.Column;
 import enums.Attribute;
 import enums.Type;
 import enums.CardType;
-import enums.CardSubType;
 import enums.Rarity;
 import enums.LimitType;
 
@@ -19,6 +19,7 @@ import enums.LimitType;
 @Setter
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
+@NoArgsConstructor
 @Table(name = "cards")
 public class Card extends BaseModel
 {
@@ -58,4 +59,24 @@ public class Card extends BaseModel
 
     @Column(name = "image_url")
     private String imageUrl = "";
+
+    @Column(name = "version")
+    private Integer version = 1;
+
+    public Card(Card card)
+    {
+        this.id = card.getId();
+        this.name = card.getName();
+        this.description = card.getDescription();
+        this.level = card.getLevel();
+        this.attribute = card.getAttribute();
+        this.type = card.getType();
+        this.attack = card.getAttack();
+        this.defense = card.getDefense();
+        this.cardType = card.getCardType();
+        this.rarity = card.getRarity();
+        this.limitType = card.getLimitType();
+        this.imageUrl = card.getImageUrl();
+        this.version = card.getVersion();
+    }
 }
