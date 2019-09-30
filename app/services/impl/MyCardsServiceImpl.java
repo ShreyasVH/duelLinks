@@ -48,12 +48,22 @@ public class MyCardsServiceImpl implements MyCardsService
     @Override
     public MyCard create(MyCardRequest myCardRequest)
     {
-        MyCard myCard = new MyCard();
-        myCard.setCardId(myCardRequest.getCardId());
-        myCard.setCardGlossType(myCardRequest.getGlossType());
-        myCard.setStatus(myCardRequest.getStatus());
-        myCard.setObtainedDate(Utils.getCurrentDate());
+        MyCard myCard = null;
+        Long cardId = myCardRequest.getCardId();
+        CardSnippet cardSnippet = this.cardsService.get(cardId);
 
-        return this.myCardsDao.save(myCard);
+        if(null != cardSnippet)
+        {
+            myCard = new MyCard();
+            myCard.setCardId(cardId);
+            myCard.setCardGlossType(myCardRequest.getGlossType());
+            myCard.setStatus(myCardRequest.getStatus());
+            myCard.setObtainedDate(Utils.getCurrentDate());
+
+            this.myCardsDao.save(myCard);
+        }
+
+
+        return myCard;
     }
 }

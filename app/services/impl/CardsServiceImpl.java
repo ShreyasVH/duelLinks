@@ -310,16 +310,19 @@ public class CardsServiceImpl implements CardsService
             {
                 String key = entry.getKey();
                 List<String> valueList = entry.getValue();
-                CardElasticAttribute cardElasticAttribute = CardElasticAttribute.fromString(key);
-                if(null != cardElasticAttribute)
+                if(!valueList.isEmpty())
                 {
-                    if(FieldType.NORMAL.equals(cardElasticAttribute.getType()))
+                    CardElasticAttribute cardElasticAttribute = CardElasticAttribute.fromString(key);
+                    if(null != cardElasticAttribute)
                     {
-                        query.must(QueryBuilders.termsQuery(key, valueList));
-                    }
-                    else if(FieldType.NESTED.equals(cardElasticAttribute.getType()))
-                    {
-                        query.must(QueryBuilders.nestedQuery(cardElasticAttribute.getNestedLevel(), QueryBuilders.termsQuery(cardElasticAttribute.getNestedTerm(), valueList), ScoreMode.None));
+                        if(FieldType.NORMAL.equals(cardElasticAttribute.getType()))
+                        {
+                            query.must(QueryBuilders.termsQuery(key, valueList));
+                        }
+                        else if(FieldType.NESTED.equals(cardElasticAttribute.getType()))
+                        {
+                            query.must(QueryBuilders.nestedQuery(cardElasticAttribute.getNestedLevel(), QueryBuilders.termsQuery(cardElasticAttribute.getNestedTerm(), valueList), ScoreMode.None));
+                        }
                     }
                 }
             }
