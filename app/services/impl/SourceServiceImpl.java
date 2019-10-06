@@ -5,6 +5,7 @@ import dao.CardSourceMapDao;
 import dao.SourceDao;
 import models.SourceCardMap;
 import models.Source;
+import play.libs.Json;
 import requests.CardsFilterRequest;
 import requests.SourceCardMapFilterRequest;
 import requests.SourceFilterRequest;
@@ -13,6 +14,7 @@ import responses.CardFilterResponse;
 import responses.SourceResponse;
 import services.CardsService;
 import services.SourceService;
+import utils.Logger;
 import utils.ThreadUtils;
 
 import java.text.SimpleDateFormat;
@@ -31,6 +33,7 @@ public class SourceServiceImpl implements SourceService
     private final CardsService cardsService;
 
     private final ThreadUtils threadUtils;
+    private final Logger logger;
 
     @Inject
     public SourceServiceImpl
@@ -40,7 +43,8 @@ public class SourceServiceImpl implements SourceService
 
         CardsService cardsService,
 
-        ThreadUtils threadUtils
+        ThreadUtils threadUtils,
+        Logger logger
     )
     {
         this.cardSourceMapDao = cardSourceMapDao;
@@ -49,6 +53,7 @@ public class SourceServiceImpl implements SourceService
         this.cardsService = cardsService;
 
         this.threadUtils = threadUtils;
+        this.logger = logger;
     }
 
     @Override
@@ -186,6 +191,8 @@ public class SourceServiceImpl implements SourceService
 
                 if(!cardsToRemove.isEmpty())
                 {
+                    this.logger.debug(Json.toJson(request).toString());
+                    this.logger.debug(Json.toJson(cardsToRemove).toString());
                     this.cardSourceMapDao.delete(cardsToRemove);
 
                     this.threadUtils.schedule(() -> cardsService.indexCards(cardsToRemove));
