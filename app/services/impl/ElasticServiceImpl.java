@@ -23,6 +23,7 @@ import org.elasticsearch.search.SearchHits;
 import play.libs.Json;
 import responses.ElasticResponse;
 import services.ElasticService;
+import utils.Logger;
 import utils.Utils;
 
 import java.io.IOException;
@@ -34,9 +35,16 @@ public class ElasticServiceImpl implements ElasticService
 {
     private static RestHighLevelClient client = null;
 
+    private final Logger logger;
+
     @Inject
-    public ElasticServiceImpl()
+    public ElasticServiceImpl
+    (
+        Logger logger
+    )
     {
+        this.logger = logger;
+
         if(null == client)
         {
             try
@@ -108,7 +116,7 @@ public class ElasticServiceImpl implements ElasticService
         }
         catch(Exception ex)
         {
-            String sh = "sh";
+            this.logger.error("Exception while indexing document. Index: " + index.getName() + ". Id: " + id + "Message: " + ex.getMessage());
         }
         return isSuccess;
     }
