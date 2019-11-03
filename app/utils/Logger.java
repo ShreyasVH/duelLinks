@@ -25,10 +25,11 @@ public class Logger
         payload.put("source", System.getenv("LOGGER_SOURCE"));
 
         String url = System.getenv("LOGGER_API_ENDPOINT") + "logs";
+        System.out.println(type + ": " + content);
         return this.api.post(url, payload);
     }
 
-    public CompletionStage<HTTPResponse> success(String content)
+    public CompletionStage<HTTPResponse> info(String content)
     {
         return log(content, "SUCCESS");
     }

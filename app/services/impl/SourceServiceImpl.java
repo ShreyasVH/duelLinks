@@ -59,6 +59,7 @@ public class SourceServiceImpl implements SourceService
     @Override
     public SourceResponse create(SourceRequest request)
     {
+        this.logger.debug("Source Update Request. " + Json.toJson(request));
         SourceResponse sourceResponse = null;
         Source source = new Source();
         source.setName(request.getName());
@@ -107,6 +108,7 @@ public class SourceServiceImpl implements SourceService
     @Override
     public SourceResponse update(SourceRequest request)
     {
+        this.logger.debug("Source Update Request. " + Json.toJson(request));
         SourceResponse sourceResponse = null;
         Source existingSource = this.sourceDao.getById(request.getId());
         if(null != existingSource)
@@ -191,8 +193,6 @@ public class SourceServiceImpl implements SourceService
 
                 if(!cardsToRemove.isEmpty())
                 {
-                    this.logger.debug(Json.toJson(request).toString());
-                    this.logger.debug(Json.toJson(cardsToRemove).toString());
                     this.cardSourceMapDao.delete(cardsToRemove);
 
                     this.threadUtils.schedule(() -> cardsService.indexCards(cardsToRemove));
