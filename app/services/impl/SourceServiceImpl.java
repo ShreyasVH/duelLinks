@@ -84,7 +84,11 @@ public class SourceServiceImpl implements SourceService
 
         Source createdSource = this.sourceDao.save(source);
 
-        if(null != createdSource.getId())
+        if(null == createdSource.getId())
+        {
+            this.logger.error("Error while saving source. Request: " + Json.toJson(request));
+        }
+        else
         {
             List<SourceCardMap> sourceCardMaps = new ArrayList<>();
 

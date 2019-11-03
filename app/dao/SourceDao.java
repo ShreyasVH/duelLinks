@@ -6,9 +6,11 @@ import io.ebean.EbeanServer;
 import io.ebean.RawSql;
 import io.ebean.RawSqlBuilder;
 import models.Source;
+
 import play.db.ebean.EbeanConfig;
 import play.db.ebean.EbeanDynamicEvolutions;
 import requests.SourceFilterRequest;
+import utils.Logger;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -20,15 +22,21 @@ public class SourceDao
     private final EbeanServer db;
     private final EbeanDynamicEvolutions ebeanDynamicEvolutions;
 
+    private final Logger logger;
+
     @Inject
     public SourceDao
     (
             EbeanConfig ebeanConfig,
-            EbeanDynamicEvolutions ebeanDynamicEvolutions
+            EbeanDynamicEvolutions ebeanDynamicEvolutions,
+
+            Logger logger
     )
     {
         this.ebeanDynamicEvolutions = ebeanDynamicEvolutions;
         this.db = Ebean.getServer(ebeanConfig.defaultServer());
+
+        this.logger = logger;
     }
 
     public Source save(Source source)
@@ -39,7 +47,7 @@ public class SourceDao
         }
         catch(Exception ex)
         {
-            String sh = "sh";
+            this.logger.error("Exception while saving source. Message: " + ex.getMessage());
         }
         return source;
     }

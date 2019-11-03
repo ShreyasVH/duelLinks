@@ -11,6 +11,7 @@ import java.util.List;
 import models.Card;
 import play.db.ebean.EbeanConfig;
 import play.db.ebean.EbeanDynamicEvolutions;
+import utils.Logger;
 
 public class CardsDao
 {
@@ -18,17 +19,23 @@ public class CardsDao
     private final EbeanDynamicEvolutions ebeanDynamicEvolutions;
     private final DatabaseExecutionContext databaseExecutionContext;
 
+    private final Logger logger;
+
     @Inject
     public CardsDao
     (
         EbeanConfig ebeanConfig,
         EbeanDynamicEvolutions ebeanDynamicEvolutions,
-        DatabaseExecutionContext databaseExecutionContext
+        DatabaseExecutionContext databaseExecutionContext,
+
+        Logger logger
     )
     {
         this.ebeanDynamicEvolutions = ebeanDynamicEvolutions;
         this.db = Ebean.getServer(ebeanConfig.defaultServer());
         this.databaseExecutionContext = databaseExecutionContext;
+
+        this.logger = logger;
     }
 
     public Card get(Long id)
@@ -42,7 +49,7 @@ public class CardsDao
         }
         catch(Exception ex)
         {
-            String sh = "sh";
+            this.logger.error("Exception while getting card. Id: " + id + ". Message: " + ex.getMessage());
         }
 
         return card;

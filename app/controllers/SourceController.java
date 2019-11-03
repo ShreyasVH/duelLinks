@@ -62,7 +62,7 @@ public class SourceController
             }
 
             SourceResponse response = this.sourceService.create(sourceRequest);
-            if((null != sourceRequest) && (null != sourceRequest.getCards()))
+            if((null != sourceRequest) && (null != response) && (null != response.getCards()))
             {
                 this.threadUtils.schedule(() -> cardsService.indexCards(response.getCards()));
             }
