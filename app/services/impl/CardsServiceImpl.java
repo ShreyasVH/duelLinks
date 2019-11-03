@@ -57,6 +57,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import services.ElasticService;
+import utils.Logger;
 import utils.Utils;
 
 public class CardsServiceImpl implements CardsService
@@ -69,6 +70,8 @@ public class CardsServiceImpl implements CardsService
 
     private final ElasticService elasticService;
 
+    private final Logger logger;
+
     @Inject
     public CardsServiceImpl
     (
@@ -78,7 +81,9 @@ public class CardsServiceImpl implements CardsService
         MyCardsDao myCardsDao,
         SourceDao sourceDao,
 
-        ElasticService elasticService
+        ElasticService elasticService,
+
+        Logger logger
     )
     {
         this.cardsDao = cardsDao;
@@ -88,6 +93,8 @@ public class CardsServiceImpl implements CardsService
         this.sourceDao = sourceDao;
 
         this.elasticService = elasticService;
+
+        this.logger = logger;
     }
 
     @Override
@@ -170,7 +177,11 @@ public class CardsServiceImpl implements CardsService
     {
         Boolean isSuccess = false;
         Card card = this.cardsDao.get(id);
-        if(null != card)
+        if(null == card)
+        {
+            this.logger.error("Could not find card for indexing. Id: " + id);
+        }
+        else
         {
             isSuccess = this.index(id, this.cardSnippet(card));
         }

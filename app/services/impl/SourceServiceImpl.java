@@ -199,6 +199,7 @@ public class SourceServiceImpl implements SourceService
                 }
 
                 sourceResponse.setCards(updatedCards);
+                this.logger.debug("Updated Cards: " + Json.toJson(updatedCards));
             }
         }
 
