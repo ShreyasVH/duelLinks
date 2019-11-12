@@ -56,4 +56,9 @@ public class MyCardsController extends BaseController
             return myCard;
         }, httpExecutionContext.current()).thenApplyAsync(myCard -> ok(Json.toJson(myCard)));
     }
+
+    public CompletionStage<Result> get(Long cardId)
+    {
+        return CompletableFuture.supplyAsync(() -> myCardsService.get(cardId), httpExecutionContext.current()).thenApplyAsync(myCards -> ok(Json.toJson(myCards)));
+    }
 }

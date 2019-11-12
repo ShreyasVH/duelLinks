@@ -66,4 +66,10 @@ public class MyCardsServiceImpl implements MyCardsService
 
         return myCard;
     }
+
+    @Override
+    public List<MyCard> get(Long id)
+    {
+        return this.myCardsDao.getByCardId(id);
+    }
 }
