@@ -130,4 +130,10 @@ public class SourceController
     {
         return CompletableFuture.supplyAsync(this.sourceService::getAll, this.httpExecutionContext.current()).thenApplyAsync(sources -> ok(Json.toJson(sources)), this.httpExecutionContext.current());
     }
+
+    public CompletionStage<Result> getSourcesForCard(Long cardId)
+    {
+        return CompletableFuture.supplyAsync(() -> this.sourceService.getSourcesForCard(cardId))
+                .thenApplyAsync(sources -> ok(Json.toJson(sources)), this.httpExecutionContext.current());
+    }
 }

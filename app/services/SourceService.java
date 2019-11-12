@@ -1,8 +1,10 @@
 package services;
 
 import models.Source;
+import models.SourceCardMap;
 import requests.SourceRequest;
 import responses.SourceResponse;
+import responses.SourceSnippet;
 
 import java.util.List;
 
@@ -19,4 +21,6 @@ public interface SourceService
     SourceResponse get(Long sourceId);
 
     List<Source> getAll();
+
+    List<SourceSnippet> getSourcesForCard(Long cardId);
 }

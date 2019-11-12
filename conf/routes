@@ -29,3 +29,4 @@ POST    /cards/source                                       controllers.SourceCo
 PUT     /cards/source                                       controllers.SourceController.update(request: Request)
 PUT     /cards/source/obtain/:id                            controllers.SourceController.obtain(id: Long)
 PUT     /cards/source/redeem/:id                            controllers.SourceController.redeem(id: Long)
+GET     /cards/source/card/:cardId                          controllers.SourceController.getSourcesForCard(cardId: Long)
