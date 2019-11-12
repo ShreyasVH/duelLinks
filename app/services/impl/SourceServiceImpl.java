@@ -273,7 +273,7 @@ public class SourceServiceImpl implements SourceService
             Map<String, List<String>> filters = new HashMap<>();
             filters.put("sources", Collections.singletonList(sourceId.toString()));
             filterRequest.setFilters(filters);
-            filterRequest.setCount(300);
+            filterRequest.setCount(1000);
 
             CardFilterResponse cardFilterResponse = this.cardsService.getWithFilters(filterRequest);
 

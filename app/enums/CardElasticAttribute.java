@@ -6,18 +6,18 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum CardElasticAttribute
 {
-    ID("id", FieldType.NORMAL),
-    NAME("name", FieldType.NORMAL),
-    LEVEL("level", FieldType.RANGE),
-    ATTRIBUTE("attribute", FieldType.NESTED, "attribute.id", "attribute"),
-    TYPE("type", FieldType.NESTED, "type.id", "type"),
-    ATTACK("attack", FieldType.RANGE),
-    DEFENSE("defense", FieldType.RANGE),
-    CARD_TYPE("cardType", FieldType.NESTED, "cardType.id", "cardType"),
-    CARD_SUB_TYPES("cardSubTypes", FieldType.NESTED, "cardSubTypes.id", "cardSubTypes"),
-    RARITY("rarity", FieldType.NESTED, "rarity.id", "rarity"),
-    LIMIT_TYPE("limitType", FieldType.NESTED, "limitType.id", "limitType"),
-    SOURCES("sources", FieldType.NESTED, "sources.id", "sources");
+    ID("id", FieldType.NORMAL, "id"),
+    NAME("name", FieldType.NORMAL, "name"),
+    LEVEL("level", FieldType.RANGE, "level"),
+    ATTRIBUTE("attribute", FieldType.NORMAL, "attributeId"),
+    TYPE("type", FieldType.NORMAL, "typeId"),
+    ATTACK("attack", FieldType.RANGE, "attack"),
+    DEFENSE("defense", FieldType.RANGE, "defense"),
+    CARD_TYPE("cardType", FieldType.NORMAL, "cardTypeId"),
+    CARD_SUB_TYPES("cardSubTypes", FieldType.NORMAL, "cardSubTypeIds"),
+    RARITY("rarity", FieldType.NORMAL, "rarityId"),
+    LIMIT_TYPE("limitType", FieldType.NORMAL, "limitTypeId"),
+    SOURCES("sources", FieldType.NORMAL, "sourceIds");
 
     @Getter
     private String name;
@@ -26,16 +26,7 @@ public enum CardElasticAttribute
     private FieldType type;
 
     @Getter
-    private String nestedTerm;
-
-    @Getter
-    private String nestedLevel;
-
-    CardElasticAttribute(String name, FieldType fieldType)
-    {
-        this.name = name;
-        this.type = fieldType;
-    }
+    private String term;
 
     public static CardElasticAttribute fromString(String label)
     {
