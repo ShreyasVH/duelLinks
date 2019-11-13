@@ -12,6 +12,7 @@ import requests.SourceFilterRequest;
 import requests.SourceRequest;
 import responses.CardFilterResponse;
 import responses.SourceResponse;
+import responses.SourceSnippet;
 import services.CardsService;
 import services.SourceService;
 import utils.Logger;
@@ -266,14 +267,11 @@ public class SourceServiceImpl implements SourceService
         Source existingSource = this.sourceDao.getById(sourceId);
         if(null != existingSource)
         {
-            SourceCardMapFilterRequest request = new SourceCardMapFilterRequest();
-            request.setId(sourceId);
-
             CardsFilterRequest filterRequest = new CardsFilterRequest();
             Map<String, List<String>> filters = new HashMap<>();
             filters.put("sources", Collections.singletonList(sourceId.toString()));
             filterRequest.setFilters(filters);
-            filterRequest.setCount(300);
+            filterRequest.setCount(1000);
 
             CardFilterResponse cardFilterResponse = this.cardsService.getWithFilters(filterRequest);
 
@@ -287,5 +285,21 @@ public class SourceServiceImpl implements SourceService
     public List<Source> getAll()
     {
         return this.sourceDao.get(new SourceFilterRequest());
+    }
+
+    @Override
+    public List<SourceSnippet> getSourcesForCard(Long cardId)
+    {
+        List<SourceSnippet> sources = new ArrayList<>();
+        SourceCardMapFilterRequest request = new SourceCardMapFilterRequest();
+        request.setCardId(cardId);
+
+        List<SourceCardMap> sourceCardMaps = this.cardSourceMapDao.get(request);
+        for(SourceCardMap sourceCardMap: sourceCardMaps)
+        {
+            sources.add(new SourceSnippet(this.sourceDao.getById(sourceCardMap.getSourceId())));
+        }
+
+        return sources;
     }
 }

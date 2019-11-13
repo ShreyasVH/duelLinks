@@ -1,14 +1,13 @@
 package responses;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import enums.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 
 @Getter
@@ -25,33 +24,43 @@ public class CardSnippet
 
     private Integer level;
 
-    private AttributeSnippet attribute;
+    private Attribute attribute;
 
-    private TypeSnippet type;
+    private Integer attributeId;
+
+    private Type type;
+
+    private Integer typeId;
 
     private Integer attack;
 
     private Integer defense;
 
-    private CardTypeSnippet cardType;
+    private CardType cardType;
 
-    private List<CardSubTypeSnippet> cardSubTypes;
+    private Integer cardTypeId;
 
-    private RaritySnippet rarity;
+    private List<CardSubType> cardSubTypes;
 
-    private LimitTypeSnippet limitType;
+    private List<Integer> cardSubTypeIds;
+
+    private Rarity rarity;
+
+    private Integer rarityId;
+
+    private LimitType limitType;
+
+    private Integer limitTypeId;
 
     private String imageUrl;
 
-    private Map<String, Integer> glossTypeStats;
+    private String glossTypeStats;
 
     private Date firstObtainedDate;
 
     private Date lastObtainedDate;
 
-    private List<MyCardSnippet> individualCards;
-
-    private List<SourceSnippet> sources;
+    private List<Long> sourceIds;
 
     private Integer version;
 }

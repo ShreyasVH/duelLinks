@@ -21,6 +21,7 @@ POST    /cards/version                                      controllers.CardsCon
 PUT     /cards                                              controllers.CardsController.update(request: Request)
 
 POST    /cards/myCards                                      controllers.MyCardsController.create(request: Request)
+GET     /cards/myCards/:cardId                              controllers.MyCardsController.get(cardId: Long)
 
 GET     /cards/source/all                                   controllers.SourceController.getAll()
 GET     /cards/source/:id                                   controllers.SourceController.get(id: Long)
@@ -28,3 +29,4 @@ POST    /cards/source                                       controllers.SourceCo
 PUT     /cards/source                                       controllers.SourceController.update(request: Request)
 PUT     /cards/source/obtain/:id                            controllers.SourceController.obtain(id: Long)
 PUT     /cards/source/redeem/:id                            controllers.SourceController.redeem(id: Long)
+GET     /cards/source/card/:cardId                          controllers.SourceController.getSourcesForCard(cardId: Long)

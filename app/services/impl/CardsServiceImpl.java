@@ -29,22 +29,13 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.SortOrder;
+import play.libs.Json;
 import requests.CardRequest;
 import requests.CardSubTypeMapFilterRequest;
 import requests.CardsFilterRequest;
 import requests.SourceCardMapFilterRequest;
 import requests.VersionRequest;
-import responses.AttributeSnippet;
-import responses.CardFilterResponse;
-import responses.CardSnippet;
-import responses.CardSubTypeSnippet;
-import responses.CardTypeSnippet;
-import responses.ElasticResponse;
-import responses.LimitTypeSnippet;
-import responses.MyCardSnippet;
-import responses.RaritySnippet;
-import responses.SourceSnippet;
-import responses.TypeSnippet;
+import responses.*;
 import services.CardsService;
 import com.google.inject.Inject;
 
@@ -115,7 +106,6 @@ public class CardsServiceImpl implements CardsService
         {
             cardSnippet = cardResponse.getCards().get(0);
         }
-
 
         return cardSnippet;
     }
@@ -236,19 +226,25 @@ public class CardsServiceImpl implements CardsService
         cardSnippet.setName(card.getName());
         cardSnippet.setDescription(card.getDescription());
         CardType cardType = card.getCardType();
-        cardSnippet.setCardType(new CardTypeSnippet(cardType));
+        cardSnippet.setCardType(cardType);
+        cardSnippet.setCardTypeId(cardType.getValue());
+
 
         if(CardType.MONSTER.equals(cardType))
         {
             cardSnippet.setLevel(card.getLevel());
-            cardSnippet.setAttribute(new AttributeSnippet(card.getAttribute()));
-            cardSnippet.setType(new TypeSnippet(card.getType()));
+            cardSnippet.setAttribute(card.getAttribute());
+            cardSnippet.setAttributeId(card.getAttribute().getValue());
+            cardSnippet.setType(card.getType());
+            cardSnippet.setTypeId(card.getType().getValue());
             cardSnippet.setAttack(card.getAttack());
             cardSnippet.setDefense(card.getDefense());
         }
 
-        cardSnippet.setRarity(new RaritySnippet(card.getRarity()));
-        cardSnippet.setLimitType(new LimitTypeSnippet(card.getLimitType()));
+        cardSnippet.setRarity(card.getRarity());
+        cardSnippet.setRarityId(card.getRarity().getValue());
+        cardSnippet.setLimitType(card.getLimitType());
+        cardSnippet.setLimitTypeId(card.getLimitType().getValue());
         cardSnippet.setImageUrl(card.getImageUrl());
         cardSnippet.setVersion(card.getVersion());
 
@@ -259,26 +255,22 @@ public class CardsServiceImpl implements CardsService
             cardSubTypeMaps = this.cardSubTypeMapDao.list(cardSubTypeMapFilterRequest);
         }
 
-        List<CardSubTypeSnippet> cardSubTypeList = new ArrayList<>();
+        List<CardSubType> cardSubTypeList = new ArrayList<>();
+        List<Integer> cardSubTypeIdList = new ArrayList<>();
         for(CardSubTypeMap cardSubTypeMap: cardSubTypeMaps)
         {
-            cardSubTypeList.add(new CardSubTypeSnippet(cardSubTypeMap.getCardSubType()));
+            cardSubTypeList.add(cardSubTypeMap.getCardSubType());
+            cardSubTypeIdList.add(cardSubTypeMap.getCardSubType().getValue());
         }
         cardSnippet.setCardSubTypes(cardSubTypeList);
+        cardSnippet.setCardSubTypeIds(cardSubTypeIdList);
 
         if(null == myCards)
         {
             myCards = this.myCardsDao.getByCardId(card.getId());
         }
-        List<MyCardSnippet> individualCards = new ArrayList<>();
-        for(MyCard myCard: myCards)
-        {
-            MyCardSnippet myCardSnippet = new MyCardSnippet(myCard);
-            individualCards.add(myCardSnippet);
-        }
-        cardSnippet.setIndividualCards(individualCards);
 
-        cardSnippet.setGlossTypeStats(this.getGlossTypeStatsMap(myCards));
+        cardSnippet.setGlossTypeStats(Json.toJson(this.getGlossTypeStatsMap(myCards)).toString());
 
         if(!myCards.isEmpty())
         {
@@ -289,18 +281,18 @@ public class CardsServiceImpl implements CardsService
         SourceCardMapFilterRequest sourceCardMapFilterRequest = new SourceCardMapFilterRequest();
         sourceCardMapFilterRequest.setCardId(cardSnippet.getId());
         List<SourceCardMap> sourceCardMaps = this.cardSourceMapDao.get(sourceCardMapFilterRequest);
-        List<SourceSnippet> sourceSnippets = new ArrayList<>();
+        List<Long> sourceIds = new ArrayList<>();
 
         for(SourceCardMap sourceCardMap: sourceCardMaps)
         {
             Source source = this.sourceDao.getById(sourceCardMap.getSourceId());
             if(null != source)
             {
-                sourceSnippets.add(new SourceSnippet(source));
+                sourceIds.add(source.getId());
             }
         }
 
-        cardSnippet.setSources(sourceSnippets);
+        cardSnippet.setSourceIds(sourceIds);
         return cardSnippet;
     }
 
@@ -324,16 +316,9 @@ public class CardsServiceImpl implements CardsService
                 if(!valueList.isEmpty())
                 {
                     CardElasticAttribute cardElasticAttribute = CardElasticAttribute.fromString(key);
-                    if(null != cardElasticAttribute)
+                    if(null != cardElasticAttribute && (FieldType.NORMAL.equals(cardElasticAttribute.getType())))
                     {
-                        if(FieldType.NORMAL.equals(cardElasticAttribute.getType()))
-                        {
-                            query.must(QueryBuilders.termsQuery(key, valueList));
-                        }
-                        else if(FieldType.NESTED.equals(cardElasticAttribute.getType()))
-                        {
-                            query.must(QueryBuilders.nestedQuery(cardElasticAttribute.getNestedLevel(), QueryBuilders.termsQuery(cardElasticAttribute.getNestedTerm(), valueList), ScoreMode.None));
-                        }
+                        query.must(QueryBuilders.termsQuery(cardElasticAttribute.getTerm(), valueList));
                     }
                 }
             }
@@ -353,7 +338,7 @@ public class CardsServiceImpl implements CardsService
                     {
                         if(valueMap.containsKey("min") || valueMap.containsKey("max"))
                         {
-                            RangeQueryBuilder rangeQueryBuilder = QueryBuilders.rangeQuery(key);
+                            RangeQueryBuilder rangeQueryBuilder = QueryBuilders.rangeQuery(cardElasticAttribute.getTerm());
 
                             if(valueMap.containsKey("min"))
                             {

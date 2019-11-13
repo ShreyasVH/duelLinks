@@ -51,26 +51,16 @@
         "type": "integer"
       },
       "attribute": {
-        "type": "nested",
-        "properties": {
-          "id": {
-            "type": "integer"
-          },
-          "name": {
-            "type": "keyword"
-          }
-        }
+        "type": "keyword"
+      },
+      "attributeId": {
+        "type": "integer"
       },
       "type": {
-        "type": "nested",
-        "properties": {
-          "id": {
-            "type": "integer"
-          },
-          "name": {
-            "type": "keyword"
-          }
-        }
+        "type": "keyword"
+      },
+      "typeId": {
+        "type": "integer"
       },
       "attack": {
         "type": "integer"
@@ -79,48 +69,28 @@
         "type": "integer"
       },
       "cardType": {
-        "type": "nested",
-        "properties": {
-          "id": {
-            "type": "integer"
-          },
-          "name": {
-            "type": "keyword"
-          }
-        }
+        "type": "keyword"
+      },
+      "cardTypeId": {
+        "type": "integer"
       },
       "cardSubTypes": {
-        "type": "nested",
-        "properties": {
-          "id": {
-            "type": "integer"
-          },
-          "name": {
-            "type": "keyword"
-          }
-        }
+        "type": "keyword"
+      },
+      "cardSubTypeIds": {
+        "type": "integer"
       },
       "rarity": {
-        "type": "nested",
-        "properties": {
-          "id": {
-            "type": "integer"
-          },
-          "name": {
-            "type": "keyword"
-          }
-        }
+        "type": "keyword"
+      },
+      "rarityId": {
+        "type": "integer"
       },
       "limitType": {
-        "type": "nested",
-        "properties": {
-          "id": {
-            "type": "integer"
-          },
-          "name": {
-            "type": "keyword"
-          }
-        }
+        "type": "keyword"
+      },
+      "limitTypeId": {
+        "type": "integer"
       },
       "imageUrl": {
         "type": "text"
@@ -129,18 +99,7 @@
         "type": "integer"
       },
       "glossTypeStats": {
-        "type": "nested",
-        "properties": {
-          "NORMAL": {
-            "type": "integer"
-          },
-          "GLOSSY": {
-            "type": "integer"
-          },
-          "PRISMATIC": {
-            "type": "integer"
-          }
-        }
+        "type": "keyword"
       },
       "firstObtainedDate": {
         "type": "date"
@@ -148,69 +107,8 @@
       "lastObtainedDate": {
         "type": "date"
       },
-      "individualCards": {
-        "type": "nested",
-        "properties": {
-          "id": {
-            "type": "long"
-          },
-          "cardId": {
-            "type": "long"
-          },
-          "glossType": {
-            "type": "nested",
-            "properties": {
-              "id": {
-                "type": "integer"
-              },
-              "name": {
-                "type": "keyword"
-              }
-            }
-          },
-          "status": {
-            "type": "nested",
-            "properties": {
-              "id": {
-                "type": "integer"
-              },
-              "name": {
-                "type": "keyword"
-              }
-            }
-          },
-          "obtainedDate": {
-            "type": "date"
-          }
-        }
-      },
-      "sources": {
-        "type": "nested",
-        "properties": {
-          "id": {
-            "type": "long"
-          },
-          "name": {
-            "type": "keyword"
-          },
-          "type": {
-            "type": "nested",
-            "properties": {
-              "id": {
-                "type": "integer"
-              },
-              "name": {
-                "type": "keyword"
-              }
-            }
-          },
-          "expiry": {
-            "type": "date"
-          },
-          "createdDate": {
-            "type": "date"
-          }
-        }
+      "sourceIds": {
+        "type": "long"
       }
     }
   }
