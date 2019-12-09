@@ -16,13 +16,13 @@ import enums.FieldType;
 import enums.LimitType;
 import enums.Rarity;
 import enums.Type;
+import exceptions.BadRequestException;
 import exceptions.NotFoundException;
 import models.Card;
 import models.CardSubTypeMap;
 import models.MyCard;
 import models.Source;
 import models.SourceCardMap;
-import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -465,6 +465,13 @@ public class CardsServiceImpl implements CardsService
     public CardSnippet create(CardRequest request)
     {
         CardSnippet cardSnippet = null;
+
+
+        Card existingCard = this.cardsDao.getLatest(request.getName());
+        if(null != existingCard)
+        {
+            throw new BadRequestException(ErrorCode.ALREADY_EXISTS.getCode(), "Card Already Exists");
+        }
 
         Card card = this.cardFromRequest(request);
         card = this.cardsDao.save(card);
