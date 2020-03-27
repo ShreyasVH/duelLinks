@@ -10,6 +10,7 @@ import io.ebean.EbeanServer;
 import models.MyCard;
 import play.db.ebean.EbeanConfig;
 import play.db.ebean.EbeanDynamicEvolutions;
+import utils.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,17 +22,23 @@ public class MyCardsDao
     private final EbeanDynamicEvolutions ebeanDynamicEvolutions;
     private final DatabaseExecutionContext databaseExecutionContext;
 
+    private final Logger logger;
+
     @Inject
     public MyCardsDao
     (
         EbeanConfig ebeanConfig,
         EbeanDynamicEvolutions ebeanDynamicEvolutions,
-        DatabaseExecutionContext databaseExecutionContext
+        DatabaseExecutionContext databaseExecutionContext,
+
+        Logger logger
     )
     {
         this.ebeanDynamicEvolutions = ebeanDynamicEvolutions;
         this.db = Ebean.getServer(ebeanConfig.defaultServer());
         this.databaseExecutionContext = databaseExecutionContext;
+
+        this.logger = logger;
     }
 
     public MyCard save(MyCard myCard)
@@ -57,7 +64,7 @@ public class MyCardsDao
         }
         catch(Exception ex)
         {
-            String sh = "sh";
+            this.logger.error("Exception while saving cardSubTypeMap. Message: " + ex.getMessage());
         }
 
         return cards;

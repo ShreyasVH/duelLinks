@@ -111,7 +111,7 @@ public class SourceDao
         }
         catch(Exception ex)
         {
-            String sh = "sh";
+            this.logger.error("Exception while filtering sources. Message: " + ex.getMessage());
         }
 
         return sources;

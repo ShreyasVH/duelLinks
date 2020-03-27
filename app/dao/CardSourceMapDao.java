@@ -8,6 +8,7 @@ import models.SourceCardMap;
 import play.db.ebean.EbeanConfig;
 import play.db.ebean.EbeanDynamicEvolutions;
 import requests.SourceCardMapFilterRequest;
+import utils.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,15 +18,20 @@ public class CardSourceMapDao
     private final EbeanServer db;
     private final EbeanDynamicEvolutions ebeanDynamicEvolutions;
 
+    private final Logger logger;
+
     @Inject
     public CardSourceMapDao
     (
         EbeanConfig ebeanConfig,
-        EbeanDynamicEvolutions ebeanDynamicEvolutions
+        EbeanDynamicEvolutions ebeanDynamicEvolutions,
+        Logger logger
     )
     {
         this.ebeanDynamicEvolutions = ebeanDynamicEvolutions;
         this.db = Ebean.getServer(ebeanConfig.defaultServer());
+
+        this.logger = logger;
     }
 
     private ExpressionList<SourceCardMap> filter(SourceCardMapFilterRequest request)
@@ -56,7 +62,7 @@ public class CardSourceMapDao
         }
         catch(Exception ex)
         {
-            String sh = "sh";
+            this.logger.error("Exception while filtering cardSourceMap. Message: " + ex.getMessage());
         }
         return sourceCardMaps;
     }
@@ -69,7 +75,7 @@ public class CardSourceMapDao
         }
         catch(Exception ex)
         {
-            String sh = "sh";
+            this.logger.error("Exception while saving sourceCardMap. Message: " + ex.getMessage());
         }
 
         return sourceCardMaps;
@@ -86,7 +92,7 @@ public class CardSourceMapDao
         }
         catch(Exception ex)
         {
-            String sh = "sh";
+            this.logger.error("Exception while deleting sourceCardMap. Message: " + ex.getMessage());
         }
 
         return isSuccess;
