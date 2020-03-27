@@ -63,7 +63,7 @@ public class CardsDao
         }
         catch(Exception ex)
         {
-            String sh = "sh";
+            this.logger.error("Exception while saving card. Message: " + ex.getMessage());
         }
         return card;
     }
@@ -82,7 +82,7 @@ public class CardsDao
         }
         catch(Exception ex)
         {
-            String sh = "sh";
+            this.logger.error("Exception while getting card by name. Name: " + name + ". Message: " + ex.getMessage());
         }
 
         return card;

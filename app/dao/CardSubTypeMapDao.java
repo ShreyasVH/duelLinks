@@ -6,6 +6,7 @@ import io.ebean.EbeanServer;
 import io.ebean.ExpressionList;
 import models.CardSubTypeMap;
 import requests.CardSubTypeMapFilterRequest;
+import utils.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +15,15 @@ public class CardSubTypeMapDao
 {
     private final EbeanServer db = Ebean.getServer("default");
 
-    @Inject
-    public CardSubTypeMapDao()
-    {
+    private final Logger logger;
 
+    @Inject
+    public CardSubTypeMapDao
+    (
+        Logger logger
+    )
+    {
+        this.logger = logger;
     }
 
     private ExpressionList<CardSubTypeMap> request(CardSubTypeMapFilterRequest request)
@@ -48,7 +54,7 @@ public class CardSubTypeMapDao
         }
         catch(Exception ex)
         {
-
+            this.logger.error("Exception while filtering. Message: " + ex.getMessage());
         }
 
         return cardSubTypeMaps;
@@ -62,7 +68,7 @@ public class CardSubTypeMapDao
         }
         catch (Exception ex)
         {
-            String sh = "sh";
+            this.logger.error("Exception while saving cardSubTypeMap. Message: " + ex.getMessage());
         }
 
         return cardSubTypeMaps;
@@ -78,7 +84,7 @@ public class CardSubTypeMapDao
         }
         catch(Exception ex)
         {
-            String sh = "sh";
+            this.logger.error("Exception while deleting cardSubTypeMap. Message: " + ex.getMessage());
         }
         return isSuccess;
     }
