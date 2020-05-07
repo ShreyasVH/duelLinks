@@ -72,10 +72,13 @@ public enum Type
     PSYCHIC(20),
 
     @EnumValue("21")
-    WURM(21),
+    WYRM(21),
 
     @EnumValue("22")
-    DIVINE_BEAST(22);
+    DIVINE_BEAST(22),
+
+    @EnumValue("23")
+    CYBERSE(23);
 
     @Getter
     private int value;
