@@ -1,5 +1,6 @@
 package requests;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import enums.Attribute;
 import enums.CardSubType;
 import enums.CardType;
@@ -15,6 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CardRequest
 {
     private Long id;
