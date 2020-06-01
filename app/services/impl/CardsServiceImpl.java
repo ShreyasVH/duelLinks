@@ -672,6 +672,7 @@ public class CardsServiceImpl implements CardsService
         }
         builder.query(finalQuery);
 
+        builder.size(1000);
         builder.sort("name.sort", SortOrder.ASC);
         builder.sort("id", SortOrder.ASC);
 
