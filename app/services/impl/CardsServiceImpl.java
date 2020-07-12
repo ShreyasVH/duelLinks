@@ -45,6 +45,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.concurrent.CompletableFuture;
 
 import services.ElasticService;
@@ -228,7 +230,7 @@ public class CardsServiceImpl implements CardsService
         CardType cardType = card.getCardType();
         cardSnippet.setCardType(cardType);
         cardSnippet.setCardTypeId(cardType.getValue());
-
+        cardSnippet.setReleaseDate(card.getReleaseDate());
 
         if(CardType.MONSTER.equals(cardType))
         {
@@ -455,6 +457,19 @@ public class CardsServiceImpl implements CardsService
             if(null != cardRequest.getImageUrl())
             {
                 card.setImageUrl(cardRequest.getImageUrl());
+            }
+
+            if(null != cardRequest.getReleaseDate())
+            {
+                try
+                {
+                    Date releaseDate = (new SimpleDateFormat("yyyy-MM-dd").parse(cardRequest.getReleaseDate()));
+                    card.setReleaseDate(releaseDate);
+                }
+                catch(Exception ex)
+                {
+                    throw new BadRequestException(ErrorCode.INVALID_REQUEST.getCode(), "Invalid Release Date");
+                }
             }
         }
 
