@@ -12,6 +12,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+
+import exceptions.BadRequestException;
+import enums.ErrorCode;
 
 @Getter
 @Setter
@@ -45,8 +50,17 @@ public class CardRequest
 
     private String imageUrl;
 
+    private String releaseDate;
+
     public void validate()
     {
-
+        try
+        {
+            Date releaseDate = (new SimpleDateFormat("yyyy-MM-dd").parse(this.releaseDate));
+        }
+        catch(Exception ex)
+        {
+            throw new BadRequestException(ErrorCode.INVALID_REQUEST.getCode(), "Invalid Release Date");
+        }
     }
 }

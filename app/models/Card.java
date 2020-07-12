@@ -8,6 +8,7 @@ import javax.persistence.Table;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Column;
+import java.util.Date;
 
 import enums.Attribute;
 import enums.Type;
@@ -63,6 +64,9 @@ public class Card extends BaseModel
     @Column(name = "version")
     private Integer version = 1;
 
+    @Column(name = "release_date")
+    private Date releaseDate;
+
     public Card(Card card)
     {
         this.id = card.getId();
@@ -78,5 +82,6 @@ public class Card extends BaseModel
         this.limitType = card.getLimitType();
         this.imageUrl = card.getImageUrl();
         this.version = card.getVersion();
+        this.releaseDate = card.getReleaseDate();
     }
 }

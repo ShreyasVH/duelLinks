@@ -63,4 +63,6 @@ public class CardSnippet
     private List<Long> sourceIds;
 
     private Integer version;
+
+    private Date releaseDate;
 }

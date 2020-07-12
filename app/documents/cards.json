@@ -109,6 +109,9 @@
       },
       "sourceIds": {
         "type": "long"
+      },
+      "releaseDate": {
+        "type": "date"
       }
     }
   }
