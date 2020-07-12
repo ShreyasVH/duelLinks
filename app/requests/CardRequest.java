@@ -54,13 +54,16 @@ public class CardRequest
 
     public void validate()
     {
-        try
+        if(null != this.releaseDate)
         {
-            Date releaseDate = (new SimpleDateFormat("yyyy-MM-dd").parse(this.releaseDate));
-        }
-        catch(Exception ex)
-        {
-            throw new BadRequestException(ErrorCode.INVALID_REQUEST.getCode(), "Invalid Release Date");
+            try
+            {
+                Date releaseDate = (new SimpleDateFormat("yyyy-MM-dd").parse(this.releaseDate));
+            }
+            catch(Exception ex)
+            {
+                throw new BadRequestException(ErrorCode.INVALID_REQUEST.getCode(), "Invalid Release Date");
+            }
         }
     }
 }
