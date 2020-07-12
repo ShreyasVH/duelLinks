@@ -17,7 +17,8 @@ public enum CardElasticAttribute
     CARD_SUB_TYPES("cardSubTypes", FieldType.NORMAL, "cardSubTypeIds"),
     RARITY("rarity", FieldType.NORMAL, "rarityId"),
     LIMIT_TYPE("limitType", FieldType.NORMAL, "limitTypeId"),
-    SOURCES("sources", FieldType.NORMAL, "sourceIds");
+    SOURCES("sources", FieldType.NORMAL, "sourceIds"),
+    RELEASE_DATE("releaseDate", FieldType.NORMAL, "releaseDate");
 
     @Getter
     private String name;
