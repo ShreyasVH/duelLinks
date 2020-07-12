@@ -489,6 +489,10 @@ public class CardsServiceImpl implements CardsService
         }
 
         Card card = this.cardFromRequest(request);
+        if(null == card.getReleaseDate())
+        {
+            card.setReleaseDate(Utils.getCurrentDate());
+        }
         card = this.cardsDao.save(card);
 
         List<CardSubTypeMap> cardSubTypeMaps = new ArrayList<>();
