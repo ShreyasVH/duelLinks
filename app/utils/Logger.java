@@ -41,6 +41,14 @@ public class Logger
 
     public CompletionStage<HTTPResponse> debug(String content)
     {
-        return log(content, "DEBUG");
+        if(1 == Integer.parseInt(System.getenv("IS_DEBUG_MODE")))
+        {
+            return log(content, "DEBUG");
+        }
+        else
+        {
+            return null;
+        }
+
     }
 }
