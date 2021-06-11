@@ -54,7 +54,10 @@ public enum CardSubType
     QUICK_PLAY(14),
 
     @EnumValue("15")
-    COUNTER(15);
+    COUNTER(15),
+
+    @EnumValue("16")
+    XYZ(16);
 
     private int value;
 }
