@@ -326,6 +326,27 @@ public class CardsServiceImpl implements CardsService
             }
         }
 
+        Map<String, List<String>> andFilters = filterRequest.getAndFilters();
+        if(!andFilters.isEmpty())
+        {
+            for(Map.Entry<String, List<String>> entry: andFilters.entrySet())
+            {
+                String key = entry.getKey();
+                List<String> valueList = entry.getValue();
+                if(!valueList.isEmpty())
+                {
+                    CardElasticAttribute cardElasticAttribute = CardElasticAttribute.fromString(key);
+                    if(null != cardElasticAttribute && (FieldType.NORMAL.equals(cardElasticAttribute.getType())))
+                    {
+                        for(String value: valueList)
+                        {
+                            query.must(QueryBuilders.termQuery(cardElasticAttribute.getTerm(), value));
+                        }
+                    }
+                }
+            }
+        }
+
         Map<String, Map<String, Long>> rangeFilters = filterRequest.getRangeFilters();
         if(!rangeFilters.isEmpty())
         {

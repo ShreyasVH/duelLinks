@@ -20,6 +20,8 @@ public class CardsFilterRequest
 
     private Map<String, List<String>> filters = new HashMap<>();
 
+    private Map<String, List<String>> andFilters = new HashMap<>();
+
     private Map<String, Map<String, Long>> rangeFilters = new HashMap<>();
 
     private Map<String, SortOrder> sortMap = new HashMap<>();
