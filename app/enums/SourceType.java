@@ -18,7 +18,8 @@ public enum SourceType
     MINI_BOX(8),
     STRUCTURE_DECK(9),
     SPECIAL_DEAL(10),
-    CAMPAIGN(11);
+    CAMPAIGN(11),
+    SELECTION_BOX(12);
 
     @Getter
     @Setter
